@@ -608,7 +608,7 @@ export default function MapPage() {
         </div>
         <nav className="flex items-center gap-3 md:gap-4">
           <a
-            href="https://stacybraiuca.com/policy-6780-3944"
+            href="https://www.loveyourlongevity.org/privacy"
             target="_blank"
             rel="noopener noreferrer"
             className="hidden md:inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
@@ -1068,7 +1068,7 @@ export default function MapPage() {
             WCAG 2.1 AA · CMS Federal Database · 5-Layer Compliance Stack
           </span>
           <a
-            href="https://stacybraiuca.com/policy-6780-3944"
+            href="https://www.loveyourlongevity.org/privacy"
             target="_blank"
             rel="noopener noreferrer"
             className="text-xs text-gray-500 hover:text-gray-700 transition-colors inline-flex items-center gap-1"
