@@ -814,9 +814,24 @@ export default function MapPage() {
           </>
         )}
         <span className="ml-auto text-xs text-gray-400 hidden md:block">
-          CMS Federal Database · State Regulatory · Quality Measures · 5-Layer Stack
+          {dataSource === 'cms'
+            ? 'CMS Federal Database · State Regulatory · Quality Measures · 5-Layer Stack'
+            : 'Preview — Sample Data · CMS Dataset Connecting Soon'}
         </span>
       </div>
+
+      {dataSource !== 'cms' && dataSource !== 'db' && (
+        <div className="bg-amber-50 border-y-2 border-amber-400 px-4 py-3">
+          <p className="text-sm font-bold text-amber-900">
+            Preview mode — sample data, not real facility records.
+          </p>
+          <p className="mt-1 text-xs text-amber-800">
+            Every facility name, rating and inspection finding shown here is fictional and
+            included only to demonstrate how the tool works. Do not use this preview to
+            evaluate a real care home. The live CMS dataset is being connected.
+          </p>
+        </div>
+      )}
 
       {/* ══ STEP 1: MAP — full width, no sidebar ══ */}
       <div
@@ -1065,7 +1080,7 @@ export default function MapPage() {
             <span className="text-sm font-semibold text-gray-900">LYL Map</span>
           </div>
           <span className="text-xs text-gray-400">
-            WCAG 2.1 AA · CMS Federal Database · 5-Layer Compliance Stack
+            WCAG 2.1 AA · 5-Layer Compliance Stack
           </span>
           <a
             href="https://www.loveyourlongevity.org/privacy"
