@@ -166,7 +166,7 @@ export default function LandingPage() {
       <section className="bg-gradient-to-br from-[#EFF6FF] via-white to-white border-b border-gray-100 px-4 md:px-8 py-16 md:py-24">
         <div className="max-w-4xl mx-auto text-center">
           <span className="inline-flex items-center gap-1.5 bg-white border border-blue-200 text-blue-600 rounded-full px-3.5 py-1.5 text-xs font-semibold mb-6 shadow-sm">
-            <Shield size={12} /> CMS Federal Database · Real-Time Compliance Data
+            <Shield size={12} /> Preview — Sample Data · CMS Dataset Connecting Soon
           </span>
           <h1 className="text-3xl md:text-5xl font-bold text-gray-900 leading-tight mb-5">
             The Nursing Home Compliance Map
@@ -431,7 +431,7 @@ export default function LandingPage() {
             <span className="text-sm font-bold text-gray-900">LYL Map</span>
           </div>
           <span className="text-xs text-gray-400">
-            WCAG 2.1 AA · CMS Federal Database · 5-Layer Compliance Stack
+            WCAG 2.1 AA · 5-Layer Compliance Stack
           </span>
           <a
             href="https://loveyourlongevity.org/privacy"
