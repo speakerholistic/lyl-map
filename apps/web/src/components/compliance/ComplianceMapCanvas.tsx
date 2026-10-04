@@ -329,7 +329,7 @@ function DensityMarker({ cluster }: { cluster: DensityCluster }) {
           >
             <p style={{ fontWeight: 600, margin: '0 0 3px', color: '#111827' }}>Density Cluster</p>
             <p style={{ margin: '0 0 3px', color: '#6B7280' }}>
-              {cluster.count} facilities in region
+              {cluster.count} care homes in region
             </p>
             <p style={{ margin: 0, color: hasCritical ? '#DC2626' : '#6B7280' }}>
               {cluster.criticalCount} critical violations
@@ -432,7 +432,7 @@ function StatInset({
         {label}
       </span>
       {properties.length === 0 ? (
-        <span style={{ fontSize: 10, color: '#94a3b8' }}>No facilities</span>
+        <span style={{ fontSize: 10, color: '#94a3b8' }}>No care homes</span>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {clean > 0 && (
@@ -659,7 +659,7 @@ export default function ComplianceMapCanvas({
 
             <button
               onClick={handleZoomOut}
-              title="Zoom out to see all facilities"
+              title="Zoom out to see all care homes"
               style={{
                 ...btnBase,
                 background: '#EFF6FF',
@@ -674,7 +674,7 @@ export default function ComplianceMapCanvas({
             {selectedId && (
               <button
                 onClick={handleReset}
-                title="Deselect facility and reset view"
+                title="Deselect care home and reset view"
                 style={{
                   ...btnBase,
                   background: '#FFF7ED',

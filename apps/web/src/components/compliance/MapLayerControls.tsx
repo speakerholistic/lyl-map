@@ -48,7 +48,7 @@ const LAYER_CONFIG: Array<{
     dot: 'bg-orange-500',
     ring: 'ring-orange-200',
     bg: 'bg-orange-50',
-    description: 'Shows state-level safety inspection results overlaid on each facility',
+    description: 'Shows state-level safety inspection results overlaid on each care home',
   },
   {
     id: 'ownership',
@@ -59,7 +59,7 @@ const LAYER_CONFIG: Array<{
     ring: 'ring-violet-200',
     bg: 'bg-violet-50',
     description:
-      'Groups facilities by their parent company so you can see which ones share an owner',
+      'Groups care homes by their parent company so you can see which ones share an owner',
   },
   {
     id: 'mobility',

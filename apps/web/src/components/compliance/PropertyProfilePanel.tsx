@@ -247,7 +247,7 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
                 value: property.pressureInjuryRate,
                 unit: '%',
                 warn: 5,
-                tip: "Percentage of residents who develop pressure injuries (bedsores) under this facility's care.",
+                tip: "Percentage of residents who develop pressure injuries (bedsores) while living in this care home.",
               },
             ].map((row) => (
               <div key={row.label} className="flex items-center justify-between">
@@ -287,10 +287,10 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
               {
                 label: 'Est. Revenue per Bed',
                 value: `$${property.revenuePerBed.toLocaleString()}`,
-                tip: 'How much this facility earns per occupied bed — indicates financial incentives',
+                tip: 'How much this care home earns per occupied bed — indicates financial incentives',
               },
               {
-                label: 'Who Runs This Facility',
+                label: 'Who Runs This Care Home',
                 value: property.operator,
                 tip: 'The legal operating entity responsible for this care home',
               },

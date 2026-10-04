@@ -106,32 +106,32 @@ const TOUR_STEPS = [
   {
     icon: <Map size={28} className="text-blue-600" />,
     title: 'Welcome to LYL Map',
-    body: "This tool shows you the real safety record of every nursing home and care facility in the US — pulled directly from the federal government's database. Let's walk through how to use it in 5 easy steps.",
+    body: "This tool shows you the real safety record of every nursing home and care home in the US — pulled directly from the federal government's database. Let's walk through how to use it in 5 easy steps.",
     highlight: null,
   },
   {
     icon: <Filter size={28} className="text-blue-600" />,
     title: 'Step 1 — Pick a State',
-    body: 'To load facilities, you MUST first select a state from the dropdown menu. Look for the "State" dropdown in the far upper-right corner of the search bar — tap it and choose your state. You can also type a city name in the search box on the left.',
+    body: 'To load care homes, you MUST first select a state from the dropdown menu. Look for the "State" dropdown in the far upper-right corner of the search bar — tap it and choose your state. You can also type a city name in the search box on the left.',
     highlight: 'filter-bar',
     showArrow: true,
   },
   {
     icon: <MousePointerClick size={28} className="text-blue-600" />,
     title: 'Step 2 — Click a Pin',
-    body: 'Each pin on the map is a care facility. Green circles = No problems found. Yellow triangles = Some violations. Red hexagons = Serious, ongoing violations. Click any pin to see the full safety report.',
+    body: 'Each pin on the map is a care home. Green circles = No problems found. Yellow triangles = Some violations. Red hexagons = Serious, ongoing violations. Click any pin to see the full safety report.',
     highlight: 'map',
   },
   {
     icon: <Layers size={28} className="text-purple-600" />,
     title: 'Step 3 — Turn On Layers',
-    body: 'Click the Layers button in the top-right of the map to add extra information: nearby hospitals, fall risk by area, who owns each facility, and how many care homes are clustered together.',
+    body: 'Click the Layers button in the top-right of the map to add extra information: nearby hospitals, fall risk by area, who owns each care home, and how many care homes are clustered together.',
     highlight: 'layers',
   },
   {
     icon: <BarChart3 size={28} className="text-orange-600" />,
-    title: 'Step 4 — Compare Facilities',
-    body: 'Scroll down below the map to compare facilities side by side — cost, safety score, staff levels, and how often residents are sent back to the hospital.',
+    title: 'Step 4 — Compare Care Homes',
+    body: 'Scroll down below the map to compare care homes side by side — cost, safety score, staff levels, and how often residents are sent back to the hospital.',
     highlight: 'compare',
   },
   {
@@ -224,7 +224,7 @@ function TourModal({ onClose }: { onClose: () => void }) {
                     State ▾
                   </span>{' '}
                   dropdown in the search bar — it's on the right side. Tap it to choose your state
-                  and load facilities.
+                  and load care homes.
                 </p>
               </div>
             </div>
@@ -666,8 +666,8 @@ export default function MapPage() {
                 setStateFilter(state);
                 setCommittedCity('');
               }}
-              placeholder="City, facility or state..."
-              label="Search facilities by city or name"
+              placeholder="City, care home or state..."
+              label="Search care homes by city or name"
               className="w-full pr-3 py-2 text-xs text-gray-900 bg-gray-50 border border-gray-200 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             />
           </div>
@@ -823,10 +823,10 @@ export default function MapPage() {
       {dataSource !== 'cms' && dataSource !== 'db' && (
         <div className="bg-amber-50 border-y-2 border-amber-400 px-4 py-3">
           <p className="text-sm font-bold text-amber-900">
-            Preview mode — sample data, not real facility records.
+            Preview mode — sample data, not real care home records.
           </p>
           <p className="mt-1 text-xs text-amber-800">
-            Every facility name, rating and inspection finding shown here is fictional and
+            Every care home name, rating and inspection finding shown here is fictional and
             included only to demonstrate how the tool works. Do not use this preview to
             evaluate a real care home. The live CMS dataset is being connected.
           </p>
@@ -914,7 +914,7 @@ export default function MapPage() {
                 </p>
               </div>
               <p className="text-xs text-gray-400 leading-relaxed">
-                Or type a city name in the search box. Facility pins will appear once you select a
+                Or type a city name in the search box. Care home pins will appear once you select a
                 location.
               </p>
             </div>
@@ -973,7 +973,7 @@ export default function MapPage() {
       {/* ── Transition: Map → Compare ── */}
       <StepTransition
         stepLabel="Step 2 of 4"
-        title="Compare facilities side by side"
+        title="Compare care homes side by side"
         subtitle="Now that you have explored the map, see how costs and safety records stack up."
         targetId="compare"
         cta="Go to Comparison"
@@ -1032,7 +1032,7 @@ export default function MapPage() {
                 <ul className="flex flex-col gap-2.5">
                   {[
                     'Every situation is different — billing disputes, staffing concerns, and emergency exits all need different approaches.',
-                    'We give you the exact words to use when talking to facility staff, billing offices, or state regulators.',
+                    'We give you the exact words to use when talking to care home staff, billing offices, or state regulators.',
                     'All recommendations come with downloadable scripts and step-by-step guidance.',
                   ].map((txt, i) => (
                     <li
@@ -1051,7 +1051,7 @@ export default function MapPage() {
               <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
                 <p className="text-xs font-semibold text-amber-800 mb-1">Not sure yet?</p>
                 <p className="text-xs text-amber-700 leading-relaxed">
-                  Go back and explore more facilities. The assessment will still be here when you
+                  Go back and explore more care homes. The assessment will still be here when you
                   are ready.
                 </p>
                 <a

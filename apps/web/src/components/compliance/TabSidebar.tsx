@@ -19,7 +19,7 @@ const TAB_LABELS: Partial<Record<TabDestination, string>> = {
   'fund-care': 'Asset & Funding Tools',
   'emergency-exit': 'Emergency Placement Tools',
   'early-signs': 'Proactive Risk Gauge',
-  'property-profile': 'Select a Facility on the Map',
+  'property-profile': 'Select a Care Home on the Map',
 };
 
 const TAB_COLORS: Partial<Record<TabDestination, string>> = {

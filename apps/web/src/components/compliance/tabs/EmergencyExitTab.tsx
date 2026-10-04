@@ -120,9 +120,9 @@ export default function EmergencyExitTab() {
           <p className="text-xs font-semibold text-red-700 mb-2">⚠ Safety Alert — {location}</p>
           <p className="text-sm text-gray-700 leading-relaxed mb-4">
             Care homes near your location have active safety violations on record.{' '}
-            {violationCount > 0 && <strong>{violationCount} facilities</strong>} are currently
+            {violationCount > 0 && <strong>{violationCount} care homes</strong>} are currently
             flagged for problems including too few staff, slow response to residents, and improper
-            use of sedation. Placing a loved one in these facilities right now raises the risk of
+            use of sedation. Placing a loved one in these care homes right now raises the risk of
             harm and a return trip to the hospital.
           </p>
           <a
