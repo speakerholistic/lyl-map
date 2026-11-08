@@ -70,7 +70,7 @@ export function SocialSignInButtons({ callbackUrl }: { callbackUrl: string }) {
 
   return (
     <div className="flex flex-col gap-[12px]">
-      <div className="flex items-center gap-[8px] text-[12px] text-gray-400">
+      <div className="flex items-center gap-[8px] text-[12px] text-gray-600">
         <span className="h-px flex-1 bg-gray-200" />
         or
         <span className="h-px flex-1 bg-gray-200" />

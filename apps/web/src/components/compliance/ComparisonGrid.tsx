@@ -13,11 +13,11 @@ interface Props {
 function ScoreBadge({ value, invert = false }: { value: number; invert?: boolean }) {
   const isGood = invert ? value < 3 : value > 70;
   const isMid = invert ? value < 6 : value > 40;
-  const color = isGood ? 'text-green-600' : isMid ? 'text-yellow-600' : 'text-red-600';
+  const color = isGood ? 'text-green-700' : isMid ? 'text-yellow-700' : 'text-red-600';
   const Icon = isGood ? TrendingDown : isMid ? Minus : TrendingUp;
   return (
     <div className={`flex items-center gap-1 ${color}`}>
-      <Icon size={12} />
+      <Icon size={12} aria-hidden="true" />
       <span className="text-xs font-semibold">{value}</span>
     </div>
   );
@@ -102,7 +102,7 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
       label: 'Safety Violations',
       render: (p: Property) => (
         <span
-          className={`text-xs font-semibold ${p.citationCount > 10 ? 'text-red-600' : p.citationCount > 3 ? 'text-yellow-600' : 'text-green-600'}`}
+          className={`text-xs font-semibold ${p.citationCount > 10 ? 'text-red-600' : p.citationCount > 3 ? 'text-yellow-700' : 'text-green-700'}`}
         >
           {p.citationCount}
         </span>
@@ -113,7 +113,7 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
       label: 'Back to Hospital Rate',
       render: (p: Property) => (
         <span
-          className={`text-xs font-semibold ${p.rehospitalizationRate > 25 ? 'text-red-600' : p.rehospitalizationRate > 15 ? 'text-yellow-600' : 'text-green-600'}`}
+          className={`text-xs font-semibold ${p.rehospitalizationRate > 25 ? 'text-red-600' : p.rehospitalizationRate > 15 ? 'text-yellow-700' : 'text-green-700'}`}
         >
           {p.rehospitalizationRate}%
         </span>
@@ -149,7 +149,7 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
             {locationLabel && (
               <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-3 py-1.5 text-xs font-medium">
-                <MapPin size={11} />
+                <MapPin size={11} aria-hidden="true" />
                 {locationLabel}
               </span>
             )}
@@ -157,88 +157,113 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
           <h2 className="text-xl md:text-2xl font-semibold text-gray-900 tracking-tight">
             Are you paying too much for too little?
           </h2>
-          <p className="text-gray-500 text-sm mt-2 max-w-xl">
+          <p className="text-gray-600 text-sm mt-2 max-w-xl">
             Some care homes charge top dollar while having serious safety violations on record.
             Compare up to 4 care homes side by side to see what you&apos;re actually getting.
           </p>
           {!selectedState && !selectedCity && (
-            <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mt-3 inline-block">
-              💡 Select a state or city above to auto-load local care homes here
+            <p className="text-xs text-amber-800 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mt-3 inline-block">
+              <span aria-hidden="true">💡 </span>Select a state or city above to auto-load local care homes here
             </p>
           )}
         </div>
 
         {/* Grid */}
-        <div className="border border-gray-200 rounded-xl overflow-hidden overflow-x-auto">
+        <div
+          className="border border-gray-200 rounded-xl overflow-hidden overflow-x-auto"
+          role="table"
+          aria-label="Care home comparison"
+        >
           {/* Column Headers */}
           <div
+            role="row"
             className="grid bg-gray-50 border-b border-gray-200"
             style={{
               gridTemplateColumns: `160px repeat(${Math.max(selected.length, 1)}, minmax(140px, 1fr))`,
             }}
           >
-            <div className="px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">
+            <div
+              role="columnheader"
+              className="px-4 py-3 text-xs font-semibold text-gray-600 uppercase tracking-wide"
+            >
               Metric
             </div>
             {selected.map((prop) => {
               const sc = statusConfig[prop.status];
               return (
-                <div key={prop.id} className="px-4 py-3 border-l border-gray-200">
+                <div key={prop.id} role="columnheader" className="px-4 py-3 border-l border-gray-200">
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <p className="text-xs font-semibold text-gray-900 leading-tight">
                         {prop.name}
                       </p>
-                      <p className="text-xs text-gray-400 mt-0.5">
+                      <p className="text-xs text-gray-600 mt-0.5">
                         {prop.city}, {prop.state}
                       </p>
                       <span
                         className={`mt-1.5 inline-flex items-center gap-1 border rounded-full px-2 py-0.5 text-xs ${sc.pill}`}
                       >
-                        <span className={`w-1.5 h-1.5 rounded-full ${sc.dot}`} />
+                        <span className={`w-1.5 h-1.5 rounded-full ${sc.dot}`} aria-hidden="true" />
                         {sc.label}
                       </span>
                     </div>
                     <button
+                      type="button"
                       onClick={() => removeProperty(prop.id)}
                       className="flex-shrink-0 p-1 rounded hover:bg-gray-200 transition-colors"
                       aria-label={`Remove ${prop.name} from comparison`}
                     >
-                      <X size={12} className="text-gray-400" />
+                      <X size={12} className="text-gray-600" aria-hidden="true" />
                     </button>
                   </div>
                 </div>
               );
             })}
             {selected.length < 4 && (
-              <div className="px-4 py-3 border-l border-gray-200 flex items-center">
+              <div role="columnheader" className="px-4 py-3 border-l border-gray-200 flex items-center">
+                <span className="sr-only">Add a care home</span>
                 <div className="relative">
                   <button
+                    type="button"
                     onClick={() => setShowPicker(!showPicker)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape') setShowPicker(false);
+                    }}
+                    aria-expanded={showPicker}
+                    aria-controls="compare-picker"
                     className="inline-flex items-center gap-1.5 bg-white border border-gray-200 rounded-lg px-3 py-2 text-xs font-medium text-gray-600 hover:border-gray-300 hover:bg-gray-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
                   >
-                    <Plus size={12} />
+                    <Plus size={12} aria-hidden="true" />
                     Add Property
                   </button>
                   {showPicker && (
-                    <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden max-h-60 overflow-y-auto">
+                    <div
+                      id="compare-picker"
+                      role="group"
+                      aria-label="Care homes you can add"
+                      onKeyDown={(e) => {
+                        if (e.key === 'Escape') setShowPicker(false);
+                      }}
+                      className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden max-h-60 overflow-y-auto">
                       {available.length === 0 ? (
-                        <p className="px-3 py-3 text-xs text-gray-400 italic">
+                        <p className="px-3 py-3 text-xs text-gray-600 italic">
                           No more care homes available. Select a state to load more.
                         </p>
                       ) : (
                         available.map((prop) => (
                           <button
+                            type="button"
                             key={prop.id}
                             onClick={() => addProperty(prop)}
                             className="w-full flex items-start gap-2 px-3 py-2.5 hover:bg-gray-50 text-left border-b border-gray-100 last:border-0 transition-colors"
                           >
                             <span
+                              aria-hidden="true"
                               className={`mt-1 w-2 h-2 rounded-full flex-shrink-0 ${prop.status === 'clean' ? 'bg-green-500' : prop.status === 'warning' ? 'bg-yellow-500' : 'bg-red-500'}`}
                             />
                             <div>
                               <p className="text-xs font-medium text-gray-900">{prop.name}</p>
-                              <p className="text-xs text-gray-400">
+                              <p className="text-xs text-gray-600">
                                 {prop.city}, {prop.state}
                               </p>
                             </div>
@@ -256,27 +281,36 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
           {rows.map((row, ri) => (
             <div
               key={row.label}
+              role="row"
               className={`grid ${ri % 2 === 1 ? 'bg-gray-50' : 'bg-white'}`}
               style={{
                 gridTemplateColumns: `160px repeat(${Math.max(selected.length, 1)}, minmax(140px, 1fr))`,
               }}
             >
-              <div className="px-4 py-3 flex items-center">
-                <span className="text-gray-400 mr-2 text-xs select-none">-</span>
+              <div role="rowheader" className="px-4 py-3 flex items-center">
+                <span className="text-gray-600 mr-2 text-xs select-none" aria-hidden="true">
+                  -
+                </span>
                 <span className="text-xs text-gray-600">{row.label}</span>
               </div>
               {selected.map((prop) => (
-                <div key={prop.id} className="px-4 py-3 border-l border-gray-100 flex items-center">
+                <div
+                  key={prop.id}
+                  role="cell"
+                  className="px-4 py-3 border-l border-gray-100 flex items-center"
+                >
                   {row.render(prop)}
                 </div>
               ))}
-              {selected.length < 4 && <div className="px-4 py-3 border-l border-gray-100" />}
+              {selected.length < 4 && (
+                <div role="cell" className="px-4 py-3 border-l border-gray-100" />
+              )}
             </div>
           ))}
 
           {selected.length === 0 && (
-            <div className="px-6 py-10 text-center">
-              <p className="text-sm text-gray-400">
+            <div role="row" className="px-6 py-10 text-center">
+              <p role="cell" className="text-sm text-gray-600">
                 {allProperties.length === 0
                   ? 'Select a state or city above to load care homes you can compare.'
                   : 'Use "Add Property" to start comparing care homes.'}

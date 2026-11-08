@@ -30,7 +30,7 @@ export default function EarlySignsTab() {
     <div className="flex flex-col gap-5">
       <div>
         <h3 className="text-base font-semibold text-gray-900">Proactive Risk Gauge</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-600 mt-1">
           Waiting for a crisis to force your hand means surrendering your legal and financial
           options. Scan early environmental markers today.
         </p>
@@ -47,7 +47,7 @@ export default function EarlySignsTab() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide">
+        <p className="text-xs font-semibold text-gray-600 uppercase tracking-wide">
           Check any that apply to your loved one:
         </p>
         {signs.map((sign) => {
@@ -67,7 +67,7 @@ export default function EarlySignsTab() {
               {isChecked ? (
                 <CheckSquare size={16} className="text-blue-600 mt-0.5 flex-shrink-0" />
               ) : (
-                <Square size={16} className="text-gray-400 mt-0.5 flex-shrink-0" />
+                <Square size={16} className="text-gray-600 mt-0.5 flex-shrink-0" />
               )}
               <span className="text-sm text-gray-700 leading-snug">{sign.label}</span>
             </button>
@@ -87,8 +87,7 @@ export default function EarlySignsTab() {
           </p>
           <a
             href={SHOP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_top"
             className="inline-flex items-center gap-1.5 bg-[#2563EB] text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Get Pre-Crisis Planning Support Now — Instant Download

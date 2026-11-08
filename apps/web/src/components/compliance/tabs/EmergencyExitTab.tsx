@@ -49,7 +49,7 @@ export default function EmergencyExitTab() {
             <p className="text-xs font-bold text-white uppercase tracking-wide mb-1">
               Urgent: Don't Rush This Decision
             </p>
-            <p className="text-xs text-red-100 leading-relaxed">
+            <p className="text-xs text-white leading-relaxed">
               Is a hospital staff member pressuring you to choose a care home right now? Stop. You
               have the right to take time. Rushed choices often lead to bad placements.
             </p>
@@ -59,7 +59,7 @@ export default function EmergencyExitTab() {
 
       <div>
         <h3 className="text-base font-semibold text-gray-900">Find a Safe Placement Fast</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-600 mt-1">
           Enter the city where your loved one is right now. We'll check which care homes nearby have
           safety problems.
         </p>
@@ -67,7 +67,7 @@ export default function EmergencyExitTab() {
 
       <div className="flex flex-col gap-3">
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">
+          <label className="block text-xs font-medium text-gray-600 mb-1.5">
             City or area where you are right now
           </label>
           <LocationAutocomplete
@@ -81,7 +81,7 @@ export default function EmergencyExitTab() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">
+          <label className="block text-xs font-medium text-gray-600 mb-1.5">
             What kind of care is needed?
           </label>
           <select
@@ -126,8 +126,7 @@ export default function EmergencyExitTab() {
           </p>
           <a
             href={SHOP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_top"
             className="inline-flex items-center gap-1.5 bg-red-600 text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-red-700 transition-colors"
           >
             Get Emergency Placement Support Now — Instant Download
@@ -137,8 +136,8 @@ export default function EmergencyExitTab() {
       )}
 
       <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-lg px-3 py-2">
-        <Shield size={13} className="text-gray-400" />
-        <span className="text-xs text-gray-500">
+        <Shield size={13} className="text-gray-600" />
+        <span className="text-xs text-gray-600">
           Includes post-discharge and transition support tools
         </span>
       </div>

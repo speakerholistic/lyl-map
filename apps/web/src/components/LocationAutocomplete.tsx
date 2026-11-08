@@ -9,7 +9,7 @@
  * anywhere on the page, including outside the map canvas.
  */
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect, useCallback, useId } from 'react';
 import { APIProvider, useMapsLibrary } from '@vis.gl/react-google-maps';
 import { Search, MapPin, X } from 'lucide-react';
 
@@ -211,6 +211,10 @@ function AutocompleteInput({
   const [activeIdx, setActiveIdx] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const uid = useId();
+  const listboxId = `${uid}-listbox`;
+  const optionId = (i: number) => `${uid}-option-${i}`;
+  const showList = open && suggestions.length > 0;
 
   // Build the service once the library is loaded
   useEffect(() => {
@@ -289,6 +293,13 @@ function AutocompleteInput({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Escape' && (open || value)) {
+      // Escape closes the list; a second Escape clears the field (APG combobox pattern)
+      e.preventDefault();
+      if (open) setOpen(false);
+      else handleClear();
+      return;
+    }
     if (!open || suggestions.length === 0) return;
     if (e.key === 'ArrowDown') {
       e.preventDefault();
@@ -299,8 +310,6 @@ function AutocompleteInput({
     } else if (e.key === 'Enter' && activeIdx >= 0) {
       e.preventDefault();
       handleSelect(suggestions[activeIdx]);
-    } else if (e.key === 'Escape') {
-      setOpen(false);
     }
   };
 
@@ -315,12 +324,16 @@ function AutocompleteInput({
       {/* Input */}
       <div className="relative">
         {icon && (
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none">
+          <span
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600 pointer-events-none"
+            aria-hidden="true"
+          >
             {icon}
           </span>
         )}
         <input
           type="text"
+          role="combobox"
           value={value}
           onChange={handleChange}
           onKeyDown={handleKeyDown}
@@ -328,8 +341,9 @@ function AutocompleteInput({
           placeholder={placeholder}
           aria-label={label}
           aria-autocomplete="list"
-          aria-expanded={open}
-          aria-haspopup="listbox"
+          aria-expanded={showList}
+          aria-controls={listboxId}
+          aria-activedescendant={showList && activeIdx >= 0 ? optionId(activeIdx) : undefined}
           autoComplete="off"
           spellCheck={false}
           className={`${className} ${icon ? 'pl-8' : ''} ${value ? 'pr-8' : ''}`}
@@ -340,47 +354,57 @@ function AutocompleteInput({
             type="button"
             onClick={handleClear}
             aria-label="Clear search"
-            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+            className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-600 hover:text-gray-900 transition-colors"
           >
-            <X size={12} />
+            <X size={12} aria-hidden="true" />
           </button>
         )}
       </div>
 
-      {/* Dropdown */}
-      {open && suggestions.length > 0 && (
-        <div
-          role="listbox"
-          aria-label="Location suggestions"
-          className="absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
-        >
-          {suggestions.map((s, i) => (
-            <button
+      {/* Screen-reader announcement of suggestion count */}
+      <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+        {showList
+          ? `${suggestions.length} suggestion${suggestions.length === 1 ? '' : 's'} available. Use up and down arrows to review, Enter to select.`
+          : ''}
+      </span>
+
+      {/* Dropdown — the listbox element always exists so aria-controls resolves */}
+      <div
+        className={
+          showList
+            ? 'absolute z-50 top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden'
+            : 'hidden'
+        }
+      >
+        <ul id={listboxId} role="listbox" aria-label="Location suggestions">
+          {showList && suggestions.map((s, i) => (
+            <li
               key={s.placeId}
+              id={optionId(i)}
               role="option"
               aria-selected={i === activeIdx}
               onMouseDown={(e) => {
                 e.preventDefault(); // prevent blur before click
                 handleSelect(s);
               }}
-              className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors ${
-                i === activeIdx ? 'bg-blue-50' : 'hover:bg-gray-50'
+              className={`w-full flex items-center gap-3 px-3 py-2.5 text-left transition-colors cursor-pointer ${
+                i === activeIdx ? 'bg-blue-50 outline outline-2 -outline-offset-2 outline-blue-700' : 'hover:bg-gray-50'
               } ${i > 0 ? 'border-t border-gray-100' : ''}`}
             >
-              <MapPin size={13} className="text-gray-400 flex-shrink-0" />
+              <MapPin size={13} className="text-gray-600 flex-shrink-0" aria-hidden="true" />
               <div className="min-w-0">
                 <p className="text-sm font-medium text-gray-900 truncate">{s.mainText}</p>
                 {s.secondaryText && (
-                  <p className="text-xs text-gray-400 truncate">{s.secondaryText}</p>
+                  <p className="text-xs text-gray-600 truncate">{s.secondaryText}</p>
                 )}
               </div>
-            </button>
+            </li>
           ))}
-          <div className="flex items-center justify-end px-3 py-1.5 border-t border-gray-100 bg-gray-50">
-            <span className="text-[10px] text-gray-400">powered by Google</span>
-          </div>
+        </ul>
+        <div className="flex items-center justify-end px-3 py-1.5 border-t border-gray-100 bg-gray-50">
+          <span className="text-[10px] text-gray-600">powered by Google</span>
         </div>
-      )}
+      </div>
     </div>
   );
 }

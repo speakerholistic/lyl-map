@@ -1,8 +1,10 @@
 'use client';
 
+import { useRef } from 'react';
 import { X, ArrowRight, TrendingDown, TrendingUp, Minus } from 'lucide-react';
 import type { Property } from '@/data/mockProperties';
 import { KAJABI_URLS } from '@/lib/kajabi';
+import { useDialogFocus } from '@/utils/useDialogFocus';
 
 interface Props {
   property: Property;
@@ -55,6 +57,10 @@ const statusConfig = {
 
 export default function PropertyProfilePanel({ property, onClose }: Props) {
   const sc = statusConfig[property.status];
+  const panelRef = useRef<HTMLDivElement>(null);
+  const closeRef = useRef<HTMLButtonElement>(null);
+  // Non-modal side panel: focus moves in on open, Escape closes, focus returns afterwards
+  useDialogFocus(panelRef, { onClose, trap: false, initialFocusRef: closeRef });
 
   const cta =
     property.status === 'critical'
@@ -80,30 +86,40 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
 
   return (
     <div
+      ref={panelRef}
       className="absolute top-0 right-0 h-full w-[380px] bg-white border-l border-gray-200 flex flex-col z-30 overflow-hidden"
       role="dialog"
-      aria-label={`Property profile for ${property.name}`}
+      aria-modal="false"
+      aria-labelledby="property-profile-title"
     >
       {/* Header */}
       <div className="flex items-start justify-between p-5 border-b border-gray-200">
         <div className="flex-1 min-w-0 pr-3">
-          <h2 className="text-base font-semibold text-gray-900 leading-tight">{property.name}</h2>
-          <p className="text-xs text-gray-500 mt-0.5">
+          <h2
+            id="property-profile-title"
+            className="text-base font-semibold text-gray-900 leading-tight"
+          >
+            <span className="sr-only">Care home profile: </span>
+            {property.name}
+          </h2>
+          <p className="text-xs text-gray-600 mt-0.5">
             {property.address}, {property.city}, {property.state}
           </p>
           <span
             className={`mt-2 inline-flex items-center gap-1.5 border rounded-full px-3 py-1 text-xs ${sc.pill}`}
           >
-            <span className={`w-1.5 h-1.5 rounded-full ${sc.dot}`} />
+            <span className={`w-1.5 h-1.5 rounded-full ${sc.dot}`} aria-hidden="true" />
             {sc.label}
           </span>
         </div>
         <button
+          ref={closeRef}
+          type="button"
           onClick={onClose}
           className="flex-shrink-0 p-1.5 rounded-lg hover:bg-gray-100 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
           aria-label="Close property profile"
         >
-          <X size={16} className="text-gray-500" />
+          <X size={16} className="text-gray-600" aria-hidden="true" />
         </button>
       </div>
 
@@ -112,35 +128,38 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
         <div className="text-center">
           <CircularRing value={property.valueScore} color="#EA580C" />
           <p
-            className="text-xs text-gray-500 mt-1"
+            className="text-xs text-gray-600 mt-1"
             title="How much care quality you get for the price (0–100, higher is better)"
           >
             Value Score
+            <span className="sr-only">: How much care quality you get for the price (0–100, higher is better)</span>
           </p>
         </div>
         <div className="text-center">
           <CircularRing value={property.qualityScore} color="#2563EB" />
           <p
-            className="text-xs text-gray-500 mt-1"
+            className="text-xs text-gray-600 mt-1"
             title="Overall care quality based on federal inspection data (0–100, higher is better)"
           >
             Quality Score
+            <span className="sr-only">: Overall care quality based on federal inspection data (0–100, higher is better)</span>
           </p>
         </div>
         <div className="text-center">
           <div className="text-lg font-semibold text-gray-900">{property.staffingRatio}</div>
           <p
-            className="text-xs text-gray-500 mt-1"
+            className="text-xs text-gray-600 mt-1"
             title="Ratio of staff to residents — e.g. 1:8 means one staff member for every 8 residents"
           >
             Staff Ratio
+            <span className="sr-only">: Ratio of staff to residents — e.g. 1:8 means one staff member for every 8 residents</span>
           </p>
         </div>
         <div className="text-center">
           <div className="text-lg font-semibold text-gray-900">
             ${(property.monthlyFee / 1000).toFixed(1)}k
           </div>
-          <p className="text-xs text-gray-500 mt-1">Monthly Cost</p>
+          <p className="text-xs text-gray-600 mt-1">Monthly Cost</p>
         </div>
       </div>
 
@@ -152,13 +171,14 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
           <div className="flex flex-col gap-1 mb-3">
             <div className="flex items-center justify-between">
               <span
-                className="text-xs text-gray-500"
+                className="text-xs text-gray-600"
                 title="Total number of safety violations found by federal inspectors"
               >
                 Safety Violations Found
+                <span className="sr-only">: Total number of safety violations found by federal inspectors</span>
               </span>
               <span
-                className={`text-xs font-semibold ${property.citationCount > 10 ? 'text-red-600' : property.citationCount > 3 ? 'text-yellow-600' : 'text-green-600'}`}
+                className={`text-xs font-semibold ${property.citationCount > 10 ? 'text-red-600' : property.citationCount > 3 ? 'text-yellow-700' : 'text-green-700'}`}
               >
                 {property.citationCount} citations
               </span>
@@ -181,7 +201,7 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
               <div key={i} className="bg-gray-50 rounded-lg px-3 py-2.5">
                 <div className="flex items-center justify-between mb-1">
                   <span className="text-xs font-medium text-gray-700">{rec.type}</span>
-                  <span className="text-xs text-gray-400">{rec.date}</span>
+                  <span className="text-xs text-gray-600">{rec.date}</span>
                 </div>
                 <p className="text-xs text-gray-600 leading-relaxed">{rec.findings}</p>
                 <span className="mt-1.5 inline-flex items-center bg-white border border-gray-200 rounded-full px-2 py-0.5 text-xs text-gray-600">
@@ -214,8 +234,9 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
               },
             ].map((row) => (
               <div key={row.label} className="flex items-start justify-between gap-3">
-                <span className="text-xs text-gray-500 flex-shrink-0" title={row.tip}>
+                <span className="text-xs text-gray-600 flex-shrink-0" title={row.tip}>
                   {row.label}
+                  <span className="sr-only">: {row.tip}</span>
                 </span>
                 <span className="text-xs font-medium text-gray-900 text-right">{row.value}</span>
               </div>
@@ -251,19 +272,20 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
               },
             ].map((row) => (
               <div key={row.label} className="flex items-center justify-between">
-                <span className="text-xs text-gray-500" title={row.tip}>
+                <span className="text-xs text-gray-600" title={row.tip}>
                   {row.label}
+                  <span className="sr-only">: {row.tip}</span>
                 </span>
                 <div className="flex items-center gap-1">
                   {row.value > row.warn ? (
-                    <TrendingUp size={11} className="text-red-500" />
+                    <TrendingUp size={11} aria-hidden="true" className="text-red-600" />
                   ) : row.value > row.warn * 0.6 ? (
-                    <Minus size={11} className="text-yellow-500" />
+                    <Minus size={11} aria-hidden="true" className="text-yellow-700" />
                   ) : (
-                    <TrendingDown size={11} className="text-green-500" />
+                    <TrendingDown size={11} aria-hidden="true" className="text-green-700" />
                   )}
                   <span
-                    className={`text-xs font-semibold ${row.value > row.warn ? 'text-red-600' : row.value > row.warn * 0.6 ? 'text-yellow-600' : 'text-green-600'}`}
+                    className={`text-xs font-semibold ${row.value > row.warn ? 'text-red-600' : row.value > row.warn * 0.6 ? 'text-yellow-700' : 'text-green-700'}`}
                   >
                     {row.value}
                     {row.unit}
@@ -301,8 +323,9 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
               },
             ].map((row) => (
               <div key={row.label} className="flex items-start justify-between gap-3">
-                <span className="text-xs text-gray-500 flex-shrink-0" title={row.tip}>
+                <span className="text-xs text-gray-600 flex-shrink-0" title={row.tip}>
                   {row.label}
+                  <span className="sr-only">: {row.tip}</span>
                 </span>
                 <span className="text-xs font-medium text-gray-900 text-right break-words max-w-[180px]">
                   {row.value}
@@ -316,14 +339,13 @@ export default function PropertyProfilePanel({ property, onClose }: Props) {
         <div className="px-5 py-4">
           <a
             href={cta.href}
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_top"
             className={`flex items-center justify-between w-full ${cta.color} text-white text-sm font-semibold px-4 py-3 rounded-xl transition-colors`}
           >
             <span className="leading-snug">{cta.text}</span>
-            <ArrowRight size={14} className="flex-shrink-0 ml-2" />
+            <ArrowRight size={14} aria-hidden="true" className="flex-shrink-0 ml-2" />
           </a>
-          <p className="text-xs text-gray-400 mt-1.5 text-center">{cta.sub}</p>
+          <p className="text-xs text-gray-600 mt-1.5 text-center">{cta.sub}</p>
         </div>
       </div>
     </div>

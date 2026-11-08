@@ -85,7 +85,7 @@ const features = [
     desc: 'See care home density, state inspection records, corporate ownership, fall risk zones, and nearby medical providers — all on one map.',
   },
   {
-    icon: <Building2 size={20} className="text-orange-600" />,
+    icon: <Building2 size={20} className="text-orange-700" />,
     label: 'Ownership Transparency',
     desc: 'See exactly who owns and operates each care home, including parent corporations and multi-care-home chains.',
   },
@@ -95,12 +95,12 @@ const features = [
     desc: 'See nearby hospitals, hospices, and home health agencies so you understand what medical support is available.',
   },
   {
-    icon: <TrendingUp size={20} className="text-green-600" />,
+    icon: <TrendingUp size={20} className="text-green-700" />,
     label: 'Quality & Value Scores',
     desc: 'Easy-to-read scores built from federal star ratings, staffing levels, safety data, and monthly fees.',
   },
   {
-    icon: <Bell size={20} className="text-yellow-600" />,
+    icon: <Bell size={20} className="text-yellow-700" />,
     label: 'Free Safety Alerts',
     desc: "Get notified when a care home receives new violations or inspection findings — so you're never caught off guard.",
   },
@@ -109,14 +109,14 @@ const features = [
 const statusLegend = [
   {
     shape: '●',
-    color: 'text-green-600',
+    color: 'text-green-700',
     bg: 'bg-green-50 border-green-200',
     label: 'Clean Record',
     desc: 'No significant safety violations or penalties found on record.',
   },
   {
     shape: '▲',
-    color: 'text-yellow-500',
+    color: 'text-yellow-700',
     bg: 'bg-yellow-50 border-yellow-200',
     label: 'Safety Issues Found',
     desc: 'Has 1–10 safety violations or a 2–3 star federal quality rating.',
@@ -144,14 +144,13 @@ export default function LandingPage() {
             Free Public Access
           </span>
         </div>
-        <div className="flex items-center gap-3">
+        <nav aria-label="Primary" className="flex items-center gap-3">
           <a
             href="https://loveyourlongevity.org/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700"
+            target="_top"
+            className="hidden md:inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900"
           >
-            Privacy Policy <ExternalLink size={10} />
+            Privacy Policy <ExternalLink size={10} aria-hidden="true" />
           </a>
           <Link
             href="/map"
@@ -159,9 +158,10 @@ export default function LandingPage() {
           >
             Open Map <ArrowRight size={14} />
           </Link>
-        </div>
+        </nav>
       </header>
 
+      <main id="main-content" tabIndex={-1} className="flex-1">
       {/* ── Hero ── */}
       <section className="bg-gradient-to-br from-[#EFF6FF] via-white to-white border-b border-gray-100 px-4 md:px-8 py-16 md:py-24">
         <div className="max-w-4xl mx-auto text-center">
@@ -192,7 +192,7 @@ export default function LandingPage() {
               See how it works <ChevronRight size={14} />
             </a>
           </div>
-          <p className="mt-5 text-xs text-gray-400">
+          <p className="mt-5 text-xs text-gray-600">
             No account required · No payment · 100% free public access
           </p>
         </div>
@@ -204,7 +204,7 @@ export default function LandingPage() {
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
             What the Map Shows You
           </h2>
-          <p className="text-sm text-gray-500 text-center mb-8 max-w-xl mx-auto">
+          <p className="text-sm text-gray-600 text-center mb-8 max-w-xl mx-auto">
             Every care home is color-coded and shaped by its compliance status, so you can see
             problems at a glance — no reading required.
           </p>
@@ -212,7 +212,12 @@ export default function LandingPage() {
             {statusLegend.map((s) => (
               <div key={s.label} className={`border rounded-xl p-5 ${s.bg}`}>
                 <div className="flex items-center gap-3 mb-3">
-                  <span className={`text-3xl leading-none font-bold ${s.color}`}>{s.shape}</span>
+                  <span
+                    className={`text-3xl leading-none font-bold ${s.color}`}
+                    aria-hidden="true"
+                  >
+                    {s.shape}
+                  </span>
                   <span className="font-semibold text-gray-900">{s.label}</span>
                 </div>
                 <p className="text-sm text-gray-600">{s.desc}</p>
@@ -228,7 +233,7 @@ export default function LandingPage() {
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
             What&apos;s Inside the Tool
           </h2>
-          <p className="text-sm text-gray-500 text-center mb-8 max-w-xl mx-auto">
+          <p className="text-sm text-gray-600 text-center mb-8 max-w-xl mx-auto">
             LYL Map layers multiple data sources into one interactive map so you have everything you
             need in one place.
           </p>
@@ -237,7 +242,7 @@ export default function LandingPage() {
               <div key={f.label} className="bg-white border border-gray-200 rounded-xl p-5">
                 <div className="mb-3">{f.icon}</div>
                 <h3 className="font-semibold text-gray-900 text-sm mb-1.5">{f.label}</h3>
-                <p className="text-xs text-gray-500 leading-relaxed">{f.desc}</p>
+                <p className="text-xs text-gray-600 leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -254,7 +259,7 @@ export default function LandingPage() {
             <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
               How to Use the Compliance Map
             </h2>
-            <p className="text-sm text-gray-500 max-w-lg mx-auto">
+            <p className="text-sm text-gray-600 max-w-lg mx-auto">
               Follow these steps to get the most out of LYL Map. You can also access this guide any
               time inside the tool by clicking the{' '}
               <span className="font-bold text-blue-600">?</span> help button.
@@ -295,7 +300,7 @@ export default function LandingPage() {
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
             How to Read a Care Home Profile
           </h2>
-          <p className="text-sm text-gray-500 text-center mb-8 max-w-xl mx-auto">
+          <p className="text-sm text-gray-600 text-center mb-8 max-w-xl mx-auto">
             When you click a pin, a detailed panel opens on the right. Here&apos;s what each section
             means.
           </p>
@@ -303,37 +308,37 @@ export default function LandingPage() {
             {[
               {
                 title: 'Status Badge',
-                icon: <AlertTriangle size={15} className="text-yellow-500" />,
+                icon: <AlertTriangle size={15} className="text-yellow-700" />,
                 desc: 'Shows whether the care home has a clean record, active citations, or systemic violations — pulled from CMS penalty and deficiency data.',
               },
               {
                 title: 'Value Score & Quality Score',
-                icon: <TrendingUp size={15} className="text-blue-500" />,
+                icon: <TrendingUp size={15} className="text-blue-600" />,
                 desc: 'Two composite scores (0–100) built from CMS star ratings, staffing hours per resident, quality measures, and monthly fees. Higher is better.',
               },
               {
                 title: 'Staffing Ratio',
-                icon: <CheckCircle2 size={15} className="text-green-500" />,
+                icon: <CheckCircle2 size={15} className="text-green-700" />,
                 desc: 'The ratio of staff to residents. A lower number (e.g. 1:4) means more staff per resident. "Not reported" means the care home didn\'t submit staffing data to CMS.',
               },
               {
                 title: 'Compliance History',
-                icon: <Shield size={15} className="text-blue-500" />,
+                icon: <Shield size={15} className="text-blue-600" />,
                 desc: 'Lists the most recent CMS inspection findings including deficiency counts, severity levels, and any special focus or abuse flags.',
               },
               {
                 title: 'Quality Measures',
-                icon: <BarChart3 size={15} className="text-purple-500" />,
+                icon: <BarChart3 size={15} className="text-purple-600" />,
                 desc: 'Shows fall rates, how often residents are sent back to a hospital, and bedsore rates. These outcomes are reported directly to the federal government.',
               },
               {
                 title: 'Financial & Ownership',
-                icon: <Building2 size={15} className="text-orange-500" />,
+                icon: <Building2 size={15} className="text-orange-700" />,
                 desc: 'Estimated monthly cost, revenue per bed, the legal operator name, and the corporate ownership chain — including how many care homes they control nationwide.',
               },
               {
                 title: 'Action Button',
-                icon: <XCircle size={15} className="text-red-500" />,
+                icon: <XCircle size={15} className="text-red-600" />,
                 desc: "Based on the care home's status, this button links to the most relevant advocacy toolkit resource for your situation — documentation tools, forensic audit guides, and more.",
               },
             ].map((item) => (
@@ -358,14 +363,14 @@ export default function LandingPage() {
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
             Understanding the Data Layers
           </h2>
-          <p className="text-sm text-gray-500 text-center mb-8 max-w-xl mx-auto">
+          <p className="text-sm text-gray-600 text-center mb-8 max-w-xl mx-auto">
             Click the Layers button in the top-right of the map to toggle these overlays on and off.
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {[
               {
                 label: 'Geographic Density',
-                color: 'text-cyan-600',
+                color: 'text-cyan-700',
                 desc: 'Shows clusters of care homes by region. Numbers inside the circles indicate how many care homes are in that area. Dashed red borders mean the cluster contains critical violations.',
               },
               {
@@ -375,7 +380,7 @@ export default function LandingPage() {
               },
               {
                 label: 'Ownership Chains',
-                color: 'text-orange-600',
+                color: 'text-orange-700',
                 desc: 'Color-codes care homes by their parent company. Care homes sharing a color are owned by the same company — helping you spot risky patterns across an entire ownership group.',
               },
               {
@@ -385,7 +390,7 @@ export default function LandingPage() {
               },
               {
                 label: 'Medical Providers',
-                color: 'text-rose-600',
+                color: 'text-rose-700',
                 desc: 'Adds hospitals (red cross), home health agencies (blue house), and hospice providers (purple heart) to the map. Helps you see what medical support is nearby.',
               },
             ].map((layer) => (
@@ -404,22 +409,23 @@ export default function LandingPage() {
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
             Ready to Look Up a Care Home?
           </h2>
-          <p className="text-blue-100 text-sm md:text-base mb-8 leading-relaxed">
+          <p className="text-white text-sm md:text-base mb-8 leading-relaxed">
             The map is free, no login required. All data comes directly from the federal CMS
             database. Start by selecting your state — results load in seconds.
           </p>
           <Link
             href="/map"
-            className="inline-flex items-center gap-2 bg-white text-[#1D4ED8] font-bold text-base px-8 py-4 rounded-xl hover:bg-blue-50 transition-colors shadow-lg"
+            className="inline-flex items-center gap-2 bg-white text-[#1D4ED8] font-bold text-base px-8 py-4 rounded-xl hover:bg-blue-50 transition-colors shadow-lg focus-visible:outline-white"
           >
             <Map size={20} /> Open the Compliance Map
           </Link>
-          <p className="mt-4 text-blue-200 text-xs">
+          <p className="mt-4 text-white text-xs">
             Step-by-step guidance is available inside the tool via the{' '}
             <span className="font-bold text-white">?</span> Help button
           </p>
         </div>
       </section>
+      </main>
 
       {/* ── Footer ── */}
       <footer className="bg-white border-t border-gray-200 px-4 md:px-8 py-6">
@@ -430,16 +436,15 @@ export default function LandingPage() {
             </div>
             <span className="text-sm font-bold text-gray-900">LYL Map</span>
           </div>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-600">
             WCAG 2.1 AA · 5-Layer Compliance Stack
           </span>
           <a
             href="https://loveyourlongevity.org/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-gray-500 hover:text-gray-700 transition-colors inline-flex items-center gap-1"
+            target="_top"
+            className="text-xs text-gray-600 hover:text-gray-900 transition-colors inline-flex items-center gap-1"
           >
-            Privacy Policy <ExternalLink size={10} />
+            Privacy Policy <ExternalLink size={10} aria-hidden="true" />
           </a>
         </div>
       </footer>

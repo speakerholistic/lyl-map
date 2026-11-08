@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -36,6 +36,7 @@ import TriageWizard from '@/components/compliance/TriageWizard';
 import type { FocusTarget } from '@/components/compliance/ComplianceMapCanvas';
 import { STATE_BOUNDS, STATE_CODES, isStateCode } from '@/data/stateBounds';
 import { DASHBOARD_URL } from '@/lib/kajabi';
+import { useDialogFocus } from '@/utils/useDialogFocus';
 
 const ComplianceMapCanvas = dynamic(() => import('@/components/compliance/ComplianceMapCanvas'), {
   ssr: false,
@@ -44,9 +45,13 @@ const ComplianceMapCanvas = dynamic(() => import('@/components/compliance/Compli
 
 function MapLoadingState() {
   return (
-    <div className="w-full h-full bg-gray-50 flex flex-col items-center justify-center gap-2">
-      <Loader2 className="text-blue-400 animate-spin" size={28} />
-      <p className="text-sm text-gray-400">Loading compliance data...</p>
+    <div
+      className="w-full h-full bg-gray-50 flex flex-col items-center justify-center gap-2"
+      role="status"
+      aria-live="polite"
+    >
+      <Loader2 className="text-blue-600 animate-spin" size={28} aria-hidden="true" />
+      <p className="text-sm text-gray-600">Loading compliance data...</p>
     </div>
   );
 }
@@ -82,13 +87,13 @@ const TOUR_STEPS = [
     highlight: 'layers',
   },
   {
-    icon: <BarChart3 size={28} className="text-orange-600" />,
+    icon: <BarChart3 size={28} className="text-orange-700" />,
     title: 'Step 4 — Compare Care Homes',
     body: 'Scroll down below the map to compare care homes side by side — cost, safety score, staff levels, and how often residents are sent back to the hospital.',
     highlight: 'compare',
   },
   {
-    icon: <Bell size={28} className="text-green-600" />,
+    icon: <Bell size={28} className="text-green-700" />,
     title: 'Step 5 — Set Up Alerts',
     body: 'Scroll to the bottom and enter your email to get free notifications when a care home near you receives a new safety violation or inspection result.',
     highlight: 'alerts',
@@ -107,12 +112,22 @@ function TourModal({ onClose }: { onClose: () => void }) {
   const current = TOUR_STEPS[step];
   const isLast = step === TOUR_STEPS.length - 1;
   const showArrow = (current as typeof current & { showArrow?: boolean }).showArrow;
+  const dialogRef = useRef<HTMLDivElement>(null);
+  useDialogFocus(dialogRef, { onClose, trap: true });
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden">
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="tour-title"
+        aria-describedby="tour-body"
+        tabIndex={-1}
+        className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden"
+      >
         {/* Progress bar */}
-        <div className="h-1 bg-gray-100">
+        <div className="h-1 bg-gray-100" aria-hidden="true">
           <div
             className="h-full bg-[#2563EB] transition-all duration-300"
             style={{ width: `${((step + 1) / TOUR_STEPS.length) * 100}%` }}
@@ -123,26 +138,34 @@ function TourModal({ onClose }: { onClose: () => void }) {
         <div className="p-6">
           <div className="flex items-start justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0">
+              <div
+                className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center flex-shrink-0"
+                aria-hidden="true"
+              >
                 {current.icon}
               </div>
               <div>
-                <p className="text-xs text-gray-400 font-medium">
+                <p className="text-xs text-gray-600 font-medium">
                   Step {step + 1} of {TOUR_STEPS.length}
                 </p>
-                <h2 className="text-base font-bold text-gray-900">{current.title}</h2>
+                <h2 id="tour-title" className="text-base font-bold text-gray-900">
+                  <span className="sr-only">How to use LYL Map: </span>
+                  {current.title}
+                </h2>
               </div>
             </div>
             <button
               onClick={onClose}
-              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-400 hover:text-gray-600"
+              className="p-1.5 hover:bg-gray-100 rounded-lg transition-colors text-gray-600 hover:text-gray-900"
               aria-label="Close guide"
             >
-              <X size={16} />
+              <X size={16} aria-hidden="true" />
             </button>
           </div>
 
-          <p className="text-sm text-gray-600 leading-relaxed mb-4">{current.body}</p>
+          <p id="tour-body" className="text-sm text-gray-600 leading-relaxed mb-4" aria-live="polite">
+            {current.body}
+          </p>
 
           {/* Arrow callout for Step 1 */}
           {showArrow && (
@@ -155,6 +178,7 @@ function TourModal({ onClose }: { onClose: () => void }) {
                   viewBox="0 0 36 36"
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
+                  aria-hidden="true"
                 >
                   <path d="M6 30 L30 6" stroke="#2563EB" strokeWidth="3" strokeLinecap="round" />
                   <path
@@ -169,7 +193,7 @@ function TourModal({ onClose }: { onClose: () => void }) {
               </div>
               <div>
                 <p className="text-xs font-bold text-blue-800 mb-0.5">
-                  👆 Look to the upper-right corner!
+                  <span aria-hidden="true">👆 </span>Look to the upper-right corner!
                 </p>
                 <p className="text-xs text-blue-700 leading-snug">
                   Find the{' '}
@@ -190,9 +214,10 @@ function TourModal({ onClose }: { onClose: () => void }) {
                 key={i}
                 onClick={() => setStep(i)}
                 className={`rounded-full transition-all ${
-                  i === step ? 'w-5 h-2 bg-[#2563EB]' : 'w-2 h-2 bg-gray-200 hover:bg-gray-300'
+                  i === step ? 'w-5 h-2 bg-[#2563EB]' : 'w-2 h-2 bg-gray-500 hover:bg-gray-700'
                 }`}
-                aria-label={`Go to step ${i + 1}`}
+                aria-label={`Go to step ${i + 1} of ${TOUR_STEPS.length}`}
+                aria-current={i === step ? 'step' : undefined}
               />
             ))}
           </div>
@@ -204,7 +229,7 @@ function TourModal({ onClose }: { onClose: () => void }) {
                 onClick={() => setStep((s) => s - 1)}
                 className="flex items-center gap-1.5 px-4 py-2.5 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl transition-colors font-medium"
               >
-                <ChevronLeft size={14} /> Back
+                <ChevronLeft size={14} aria-hidden="true" /> Back
               </button>
             )}
             {isLast ? (
@@ -212,21 +237,21 @@ function TourModal({ onClose }: { onClose: () => void }) {
                 onClick={onClose}
                 className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-bold text-white bg-[#2563EB] hover:bg-blue-700 rounded-xl transition-colors"
               >
-                Start Exploring <Map size={14} />
+                Start Exploring <Map size={14} aria-hidden="true" />
               </button>
             ) : (
               <button
                 onClick={() => setStep((s) => s + 1)}
                 className="flex-1 flex items-center justify-center gap-1.5 px-4 py-2.5 text-sm font-bold text-white bg-[#2563EB] hover:bg-blue-700 rounded-xl transition-colors"
               >
-                Next <ChevronRight size={14} />
+                Next <ChevronRight size={14} aria-hidden="true" />
               </button>
             )}
           </div>
 
           <button
             onClick={onClose}
-            className="w-full mt-2 text-xs text-gray-400 hover:text-gray-600 transition-colors py-1"
+            className="w-full mt-2 text-xs text-gray-600 hover:text-gray-900 transition-colors py-1"
           >
             Skip tutorial
           </button>
@@ -238,19 +263,26 @@ function TourModal({ onClose }: { onClose: () => void }) {
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 const legendItems = [
-  { shape: '●', color: 'text-green-600', label: 'Clean' },
-  { shape: '▲', color: 'text-yellow-500', label: 'Citations' },
+  { shape: '●', color: 'text-green-700', label: 'Clean' },
+  { shape: '▲', color: 'text-yellow-700', label: 'Citations' },
   { shape: '⬡', color: 'text-red-600', label: 'Violations' },
 ];
 
-const STATUS_FILTERS: { value: '' | ComplianceStatus; label: string }[] = [
+const STATUS_FILTERS: { value: '' | ComplianceStatus; label: string; shape?: string }[] = [
   { value: '', label: 'All' },
-  { value: 'clean', label: '● Clean' },
-  { value: 'warning', label: '▲ Citations' },
-  { value: 'critical', label: '⬡ Violations' },
+  { value: 'clean', label: 'Clean', shape: '●' },
+  { value: 'warning', label: 'Citations', shape: '▲' },
+  { value: 'critical', label: 'Violations', shape: '⬡' },
 ];
 
 const US_STATES = STATE_CODES;
+
+/** Plain-text status used in accessible names (pins, list view). */
+const STATUS_TEXT: Record<ComplianceStatus, string> = {
+  clean: 'Clean record',
+  warning: 'Citations found',
+  critical: 'Serious violations',
+};
 
 interface FetchResult {
   source: 'cms' | 'db' | 'mock';
@@ -300,18 +332,18 @@ function StepTransition({
     >
       <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <p className="text-xs font-bold text-blue-200 uppercase tracking-widest mb-1">
+          <p className="text-xs font-bold text-white uppercase tracking-widest mb-1">
             {stepLabel}
           </p>
-          <h3 className="text-base md:text-lg font-bold">{title}</h3>
-          <p className="text-sm text-blue-100 mt-1">{subtitle}</p>
+          <h2 className="text-base md:text-lg font-bold">{title}</h2>
+          <p className="text-sm text-white mt-1">{subtitle}</p>
         </div>
         <a
           href={`#${targetId}`}
-          className="flex-shrink-0 inline-flex items-center gap-2 bg-white text-blue-700 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-blue-50 transition-colors"
+          className="flex-shrink-0 inline-flex items-center gap-2 bg-white text-blue-700 font-semibold text-sm px-5 py-2.5 rounded-xl hover:bg-blue-50 transition-colors focus-visible:outline-white"
         >
           {cta}
-          <ArrowDown size={14} />
+          <ArrowDown size={14} aria-hidden="true" />
         </a>
       </div>
     </div>
@@ -329,6 +361,8 @@ export default function MapPage() {
   const [statusFilter, setStatusFilter] = useState<'' | ComplianceStatus>('');
   const [activeLayers, setActiveLayers] = useState<Set<LayerId>>(new Set());
   const [showTour, setShowTour] = useState(false);
+  // Accessible list alternative to the visual map
+  const [listOpen, setListOpen] = useState(false);
   // Tracks where the map should auto-fly (state center or city centroid)
   const [focusTarget, setFocusTarget] = useState<FocusTarget | null>(null);
   const router = useRouter();
@@ -524,7 +558,7 @@ export default function MapPage() {
         <div className="flex items-center gap-2.5">
           <Link
             href="/"
-            className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 transition-colors mr-1"
+            className="flex items-center gap-1.5 text-xs text-gray-600 hover:text-gray-900 transition-colors mr-1"
             aria-label="Back to home"
           >
             <ArrowLeft size={13} />
@@ -533,12 +567,16 @@ export default function MapPage() {
           {DASHBOARD_URL && (
             <a
               href={DASHBOARD_URL}
-              className="hidden sm:inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors mr-1"
+              target="_top"
+              className="hidden sm:inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 transition-colors mr-1"
             >
               Back to my dashboard
             </a>
           )}
-          <div className="w-7 h-7 bg-[#2563EB] rounded-lg flex items-center justify-center flex-shrink-0">
+          <div
+            className="w-7 h-7 bg-[#2563EB] rounded-lg flex items-center justify-center flex-shrink-0"
+            aria-hidden="true"
+          >
             <Shield size={14} className="text-white" />
           </div>
           <span className="text-sm md:text-base font-semibold text-gray-900">LYL Map</span>
@@ -546,14 +584,13 @@ export default function MapPage() {
             Free Public Access
           </span>
         </div>
-        <nav className="flex items-center gap-3 md:gap-4">
+        <nav aria-label="Primary" className="flex items-center gap-3 md:gap-4">
           <a
             href="https://www.loveyourlongevity.org/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors"
+            target="_top"
+            className="hidden md:inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 transition-colors"
           >
-            Privacy Policy <ExternalLink size={10} />
+            Privacy Policy <ExternalLink size={10} aria-hidden="true" />
           </a>
           <a
             href="#compare"
@@ -571,10 +608,10 @@ export default function MapPage() {
           <button
             onClick={() => setShowTour(true)}
             className="inline-flex items-center gap-1.5 bg-gray-100 hover:bg-gray-200 text-gray-600 rounded-full px-3 py-1.5 text-xs font-medium transition-colors"
-            aria-label="Open how-to guide"
-            title="How to use this tool"
+            aria-label="Help: open how-to guide"
+            aria-haspopup="dialog"
           >
-            <HelpCircle size={13} /> Help
+            <HelpCircle size={13} aria-hidden="true" /> Help
           </button>
           <a
             href="#alerts"
@@ -587,10 +624,15 @@ export default function MapPage() {
 
       <UrgencyBanner />
 
+      <main id="main-content" tabIndex={-1} className="flex flex-col">
+      <h1 className="sr-only">LYL Map — nursing home and care home compliance map</h1>
+
       {/* ── Search + Filter bar ── */}
       <div
         className="bg-white border-b border-gray-200 px-3 md:px-6 py-2 flex flex-col gap-2 flex-shrink-0"
         id="filter-bar"
+        role="search"
+        aria-label="Find care homes"
       >
         {/* Row 1: Search + State + Clear */}
         <div className="flex items-center gap-2">
@@ -664,10 +706,10 @@ export default function MapPage() {
                 setStatusFilter('');
                 setCommittedCity('');
               }}
-              className="inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors flex-shrink-0 p-2 bg-gray-100 rounded-lg"
+              className="inline-flex items-center gap-1 text-xs text-gray-600 hover:text-gray-900 transition-colors flex-shrink-0 p-2 bg-gray-100 rounded-lg"
               aria-label="Clear filters"
             >
-              <X size={13} />
+              <X size={13} aria-hidden="true" />
             </button>
           )}
         </div>
@@ -690,20 +732,30 @@ export default function MapPage() {
                     : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
                 }`}
               >
+                {f.shape && <span aria-hidden="true">{f.shape} </span>}
                 {f.label}
               </button>
             ))}
           </div>
 
           <div className="ml-auto flex items-center gap-2 flex-shrink-0">
-            {isLoading && <Loader2 size={12} className="text-blue-500 animate-spin" />}
+            <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+              {isLoading
+                ? 'Loading care homes…'
+                : hasUserInput
+                  ? `${visibleProperties.length} care home${visibleProperties.length === 1 ? '' : 's'} found`
+                  : ''}
+            </span>
+            {isLoading && (
+              <Loader2 size={12} className="text-blue-600 animate-spin" aria-hidden="true" />
+            )}
             {hasUserInput && (
-              <span className="text-xs text-gray-400 whitespace-nowrap">
+              <span className="text-xs text-gray-600 whitespace-nowrap" aria-hidden="true">
                 {visibleProperties.length} found
               </span>
             )}
             {!hasUserInput && (
-              <span className="text-xs text-gray-400 italic whitespace-nowrap hidden sm:block">
+              <span className="text-xs text-gray-600 italic whitespace-nowrap hidden sm:block">
                 Select a state or city
               </span>
             )}
@@ -718,7 +770,8 @@ export default function MapPage() {
                 }`}
                 title={fetchResult?.note}
               >
-                {dataSource === 'cms' ? '● Live' : dataSource === 'db' ? '● Saved' : '● Demo'}
+                <span aria-hidden="true">● </span>
+                {dataSource === 'cms' ? 'Live data' : dataSource === 'db' ? 'Saved data' : 'Demo data'}
               </span>
             )}
           </div>
@@ -727,8 +780,8 @@ export default function MapPage() {
 
       {/* ── Legend bar ── */}
       <div className="hidden sm:flex bg-white border-b border-gray-200 px-4 md:px-6 py-2 items-center gap-3 flex-shrink-0">
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">Legend</span>
-        <span className="text-gray-200">|</span>
+        <span className="text-xs font-semibold text-gray-600 uppercase tracking-wide">Legend</span>
+        <span className="text-gray-300" aria-hidden="true">|</span>
         {legendItems.map((item) => (
           <span key={item.label} className="inline-flex items-center gap-1.5 text-xs text-gray-600">
             <span className={`text-base leading-none ${item.color}`} aria-hidden="true">
@@ -739,21 +792,23 @@ export default function MapPage() {
         ))}
         {activeLayers.has('medical') && (
           <>
-            <span className="text-gray-200">|</span>
-            <span className="text-xs text-gray-500 font-medium">Medical:</span>
+            <span className="text-gray-300" aria-hidden="true">|</span>
+            <span className="text-xs text-gray-600 font-medium">Medical:</span>
             {[
               { s: '✛', c: 'text-red-600', l: 'Hospital' },
               { s: '⌂', c: 'text-blue-600', l: 'Home Health' },
               { s: '♥', c: 'text-purple-600', l: 'Hospice' },
             ].map((item) => (
               <span key={item.l} className="inline-flex items-center gap-1 text-xs text-gray-600">
-                <span className={`font-bold ${item.c}`}>{item.s}</span>
+                <span className={`font-bold ${item.c}`} aria-hidden="true">
+                  {item.s}
+                </span>
                 {item.l}
               </span>
             ))}
           </>
         )}
-        <span className="ml-auto text-xs text-gray-400 hidden md:block">
+        <span className="ml-auto text-xs text-gray-600 hidden md:block">
           {dataSource === 'cms'
             ? 'CMS Federal Database · State Regulatory · Quality Measures · 5-Layer Stack'
             : 'Preview — Sample Data · CMS Dataset Connecting Soon'}
@@ -774,11 +829,24 @@ export default function MapPage() {
       )}
 
       {/* ══ STEP 1: MAP — full width, no sidebar ══ */}
-      <div
+      <section
         id="map-section"
+        aria-label="Care home map"
+        aria-describedby="map-sr-hint"
         className="relative flex-shrink-0"
         style={{ height: 'clamp(360px, 55vw, 620px)', minHeight: 320 }}
       >
+        <p id="map-sr-hint" className="sr-only">
+          The map is visual. The same care homes are available as a text list in the &quot;List
+          view of care homes&quot; section directly below the map.
+        </p>
+        <a
+          href="#care-home-list"
+          onClick={() => setListOpen(true)}
+          className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:left-1/2 focus:-translate-x-1/2 focus:z-40 focus:bg-white focus:text-blue-700 focus:font-semibold focus:text-sm focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg"
+        >
+          Skip the map and go to the list of care homes
+        </a>
         {/* Map stays mounted while data loads so it keeps its position/zoom */}
         <ComplianceMapCanvas
           properties={visibleProperties}
@@ -796,11 +864,14 @@ export default function MapPage() {
         )}
 
         {/* ── Journey steps — vertical overlay, left side of map ── */}
-        <div className="hidden sm:flex absolute top-3 left-3 z-10 flex-col gap-2">
+        <nav
+          aria-label="Page sections"
+          className="hidden sm:flex absolute top-3 left-3 z-10 flex-col gap-2"
+        >
           {[
-            { n: '1', label: 'Explore Map', href: '#filter-bar', dot: 'bg-blue-500' },
-            { n: '2', label: 'Compare', href: '#compare', dot: 'bg-purple-500' },
-            { n: '3', label: 'Assess Needs', href: '#assess', dot: 'bg-green-500' },
+            { n: '1', label: 'Explore Map', href: '#filter-bar', dot: 'bg-blue-700' },
+            { n: '2', label: 'Compare', href: '#compare', dot: 'bg-purple-700' },
+            { n: '3', label: 'Assess Needs', href: '#assess', dot: 'bg-green-700' },
           ].map((s) => (
             <a
               key={s.n}
@@ -809,22 +880,29 @@ export default function MapPage() {
             >
               <span
                 className={`w-6 h-6 rounded-full ${s.dot} text-white text-xs font-bold flex items-center justify-center flex-shrink-0`}
+                aria-hidden="true"
               >
                 {s.n}
               </span>
-              <span className="text-xs font-medium text-gray-700 whitespace-nowrap">{s.label}</span>
+              <span className="text-xs font-medium text-gray-700 whitespace-nowrap">
+                <span className="sr-only">Step {s.n}: </span>
+                {s.label}
+              </span>
             </a>
           ))}
-        </div>
+        </nav>
 
         {/* Empty-state prompt */}
         {!hasUserInput && !isLoading && (
           <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
             <div className="bg-white/95 backdrop-blur border border-gray-200 rounded-2xl shadow-lg px-6 py-5 max-w-sm text-center mx-4 pointer-events-auto">
-              <div className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-3">
+              <div
+                className="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center mx-auto mb-3"
+                aria-hidden="true"
+              >
                 <Map size={22} className="text-blue-600" />
               </div>
-              <h3 className="text-sm font-bold text-gray-900 mb-2">Pick a state to get started</h3>
+              <h2 className="text-sm font-bold text-gray-900 mb-2">Pick a state to get started</h2>
               {/* Arrow callout pointing upper-right */}
               <div className="flex items-center justify-center gap-2 bg-blue-50 border border-blue-200 rounded-xl px-3 py-2.5 mb-3">
                 <svg
@@ -834,6 +912,7 @@ export default function MapPage() {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className="flex-shrink-0"
+                  aria-hidden="true"
                 >
                   <path d="M6 30 L30 6" stroke="#2563EB" strokeWidth="3" strokeLinecap="round" />
                   <path
@@ -854,7 +933,7 @@ export default function MapPage() {
                   search bar above
                 </p>
               </div>
-              <p className="text-xs text-gray-400 leading-relaxed">
+              <p className="text-xs text-gray-600 leading-relaxed">
                 Or type a city name in the search box. Care home pins will appear once you select a
                 location.
               </p>
@@ -871,29 +950,33 @@ export default function MapPage() {
 
         {/* Stats badge */}
         {hasUserInput && (
-          <div className="absolute bottom-3 left-3 bg-white/95 backdrop-blur border border-gray-200 rounded-xl px-3 py-2 flex items-center gap-3 z-10 shadow-sm">
+          <div
+            className="absolute bottom-3 left-3 bg-white/95 backdrop-blur border border-gray-200 rounded-xl px-3 py-2 flex items-center gap-3 z-10 shadow-sm"
+            role="group"
+            aria-label="Care home counts by status"
+          >
             <div className="text-center">
-              <span className="text-sm font-semibold text-green-600">{cleanCount}</span>
-              <p className="text-[10px] text-gray-400">Clean</p>
+              <span className="text-sm font-semibold text-green-700">{cleanCount}</span>
+              <p className="text-[10px] text-gray-600">Clean</p>
             </div>
             <div className="w-px h-7 bg-gray-200" />
             <div className="text-center">
-              <span className="text-sm font-semibold text-yellow-600">{warningCount}</span>
-              <p className="text-[10px] text-gray-400">Citations</p>
+              <span className="text-sm font-semibold text-yellow-700">{warningCount}</span>
+              <p className="text-[10px] text-gray-600">Citations</p>
             </div>
             <div className="w-px h-7 bg-gray-200" />
             <div className="text-center">
               <span className="text-sm font-semibold text-red-600">{criticalCount}</span>
-              <p className="text-[10px] text-gray-400">Critical</p>
+              <p className="text-[10px] text-gray-600">Critical</p>
             </div>
             {activeLayers.has('medical') && medData && (
               <>
                 <div className="w-px h-7 bg-gray-200" />
                 <div className="text-center">
-                  <span className="text-sm font-semibold text-rose-600">
+                  <span className="text-sm font-semibold text-rose-700">
                     {medData.providers?.length ?? 0}
                   </span>
-                  <p className="text-[10px] text-gray-400">Medical</p>
+                  <p className="text-[10px] text-gray-600">Medical</p>
                 </div>
               </>
             )}
@@ -904,12 +987,94 @@ export default function MapPage() {
         {selectedProperty && (
           <div className="absolute top-0 right-0 h-full z-30 w-full md:w-[380px]">
             <PropertyProfilePanel
+              key={selectedProperty.id}
               property={selectedProperty}
               onClose={() => setSelectedProperty(null)}
             />
           </div>
         )}
-      </div>
+      </section>
+
+      {/* ── Accessible list alternative to the map ── */}
+      <details
+        id="care-home-list"
+        open={listOpen}
+        onToggle={(e) => setListOpen((e.currentTarget as HTMLDetailsElement).open)}
+        className="bg-white border-b border-gray-200 px-4 md:px-6 py-2"
+      >
+        <summary className="cursor-pointer text-xs font-semibold text-blue-700 py-1 w-fit">
+          List view of care homes
+          {hasUserInput ? ` (${visibleProperties.length})` : ''}
+        </summary>
+        <div className="max-w-screen-xl mx-auto py-3">
+          {!hasUserInput ? (
+            <p className="text-sm text-gray-600">
+              Select a state or search for a city above to list care homes here.
+            </p>
+          ) : isLoading ? (
+            <p className="text-sm text-gray-600">Loading care homes…</p>
+          ) : visibleProperties.length === 0 ? (
+            <p className="text-sm text-gray-600">No care homes match the current filters.</p>
+          ) : (
+            <div className="overflow-x-auto max-h-96 overflow-y-auto border border-gray-200 rounded-lg">
+              <table className="w-full text-left text-xs">
+                <caption className="sr-only">
+                  Care homes shown on the map, with compliance status and citation count
+                </caption>
+                <thead className="bg-gray-50 text-gray-700 sticky top-0">
+                  <tr>
+                    <th scope="col" className="px-3 py-2 font-semibold">
+                      Care home
+                    </th>
+                    <th scope="col" className="px-3 py-2 font-semibold">
+                      Location
+                    </th>
+                    <th scope="col" className="px-3 py-2 font-semibold">
+                      Status
+                    </th>
+                    <th scope="col" className="px-3 py-2 font-semibold">
+                      Citations
+                    </th>
+                    <th scope="col" className="px-3 py-2 font-semibold">
+                      <span className="sr-only">Actions</span>
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {visibleProperties.map((p) => (
+                    <tr key={p.id} className="border-t border-gray-100">
+                      <th scope="row" className="px-3 py-2 font-medium text-gray-900">
+                        {p.name}
+                      </th>
+                      <td className="px-3 py-2 text-gray-700">
+                        {p.city}, {p.state}
+                      </td>
+                      <td className="px-3 py-2 text-gray-700">
+                        {STATUS_TEXT[p.status]}
+                      </td>
+                      <td className="px-3 py-2 text-gray-700">{p.citationCount}</td>
+                      <td className="px-3 py-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setSelectedProperty(p);
+                            document
+                              .getElementById('map-section')
+                              ?.scrollIntoView({ block: 'start' });
+                          }}
+                          className="text-blue-700 font-semibold underline hover:text-blue-900"
+                        >
+                          View profile<span className="sr-only"> for {p.name}</span>
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </details>
 
       {/* ── Transition: Map → Compare ── */}
       <StepTransition
@@ -946,13 +1111,13 @@ export default function MapPage() {
         <div className="max-w-screen-xl mx-auto">
           <div className="mb-8">
             <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 rounded-full px-3 py-1.5 text-sm font-medium mb-3">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
+              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" aria-hidden="true" />
               Needs Assessment
             </div>
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900 tracking-tight">
               What is your situation right now?
             </h2>
-            <p className="text-gray-500 text-sm mt-2 max-w-xl">
+            <p className="text-gray-600 text-sm mt-2 max-w-xl">
               Answer three short questions and we will match you with the right resources, scripts,
               and care guidance for your family.
             </p>
@@ -969,8 +1134,8 @@ export default function MapPage() {
             {/* Context sidebar */}
             <div className="flex flex-col gap-4">
               <div className="bg-white border border-gray-200 rounded-2xl p-5 shadow-sm">
-                <h4 className="text-sm font-semibold text-gray-900 mb-3">Why this matters</h4>
-                <ul className="flex flex-col gap-2.5">
+                <h3 className="text-sm font-semibold text-gray-900 mb-3">Why this matters</h3>
+                <ol className="flex flex-col gap-2.5">
                   {[
                     'Every situation is different — billing disputes, staffing concerns, and emergency exits all need different approaches.',
                     'We give you the exact words to use when talking to care home staff, billing offices, or state regulators.',
@@ -980,13 +1145,16 @@ export default function MapPage() {
                       key={i}
                       className="flex items-start gap-2 text-xs text-gray-600 leading-relaxed"
                     >
-                      <span className="w-4 h-4 rounded-full bg-blue-50 text-blue-600 font-bold flex items-center justify-center flex-shrink-0 text-[10px] mt-0.5">
+                      <span
+                        className="w-4 h-4 rounded-full bg-blue-50 text-blue-600 font-bold flex items-center justify-center flex-shrink-0 text-[10px] mt-0.5"
+                        aria-hidden="true"
+                      >
                         {i + 1}
                       </span>
                       {txt}
                     </li>
                   ))}
-                </ul>
+                </ol>
               </div>
 
               <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
@@ -1011,25 +1179,28 @@ export default function MapPage() {
       <div id="alerts">
         <EmailOptIn />
       </div>
+      </main>
 
       <footer className="bg-white border-t border-gray-200 px-4 md:px-6 py-6">
         <div className="max-w-screen-xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 bg-[#2563EB] rounded-md flex items-center justify-center">
+            <div
+              className="w-6 h-6 bg-[#2563EB] rounded-md flex items-center justify-center"
+              aria-hidden="true"
+            >
               <Shield size={12} className="text-white" />
             </div>
             <span className="text-sm font-semibold text-gray-900">LYL Map</span>
           </div>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-600">
             WCAG 2.1 AA · 5-Layer Compliance Stack
           </span>
           <a
             href="https://www.loveyourlongevity.org/privacy"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-xs text-gray-500 hover:text-gray-700 transition-colors inline-flex items-center gap-1"
+            target="_top"
+            className="text-xs text-gray-600 hover:text-gray-900 transition-colors inline-flex items-center gap-1"
           >
-            Privacy Policy <ExternalLink size={10} />
+            Privacy Policy <ExternalLink size={10} aria-hidden="true" />
           </a>
         </div>
       </footer>

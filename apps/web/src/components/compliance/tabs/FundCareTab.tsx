@@ -29,19 +29,19 @@ export default function FundCareTab() {
     <div className="flex flex-col gap-5">
       <div>
         <h3 className="text-base font-semibold text-gray-900">Asset & Equity Calculator</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-600 mt-1">
           Understand how long your assets will last before care home billing depletes them.
         </p>
       </div>
 
       <div className="flex flex-col gap-3">
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">
+          <label className="block text-xs font-medium text-gray-600 mb-1.5">
             How much money do you have saved? (total)
           </label>
           <div className="relative">
             <DollarSign
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"
               size={14}
             />
             <input
@@ -55,12 +55,12 @@ export default function FundCareTab() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">
+          <label className="block text-xs font-medium text-gray-600 mb-1.5">
             What is your home or property worth? (if you own one)
           </label>
           <div className="relative">
             <DollarSign
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"
               size={14}
             />
             <input
@@ -74,12 +74,12 @@ export default function FundCareTab() {
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-gray-500 mb-1.5">
+          <label className="block text-xs font-medium text-gray-600 mb-1.5">
             What is the monthly cost of the care home?
           </label>
           <div className="relative">
             <DollarSign
-              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"
+              className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-600"
               size={14}
             />
             <input
@@ -103,7 +103,7 @@ export default function FundCareTab() {
       {result && (
         <div className="bg-[#FFF7ED] border border-orange-200 rounded-xl p-4">
           <div className="flex items-start gap-2 mb-2">
-            <AlertTriangle size={16} className="text-orange-600 mt-0.5 flex-shrink-0" />
+            <AlertTriangle size={16} className="text-orange-700 mt-0.5 flex-shrink-0" />
             <span className="text-xs font-semibold text-orange-700 uppercase tracking-wide">
               ⚠ Money Timeline Warning
             </span>
@@ -111,8 +111,7 @@ export default function FundCareTab() {
           <p className="text-sm text-gray-700 leading-relaxed mb-4">{result.message}</p>
           <a
             href={SHOP_URL}
-            target="_blank"
-            rel="noopener noreferrer"
+            target="_top"
             className="inline-flex items-center gap-1.5 bg-[#2563EB] text-white text-xs font-semibold px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
             Get Asset Insulation Shield Now — Instant Download

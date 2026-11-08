@@ -120,3 +120,57 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* ── Accessibility (WCAG 2.1 AA) ─────────────────────────────────────────── */
+@layer base {
+  /* Placeholder text must meet 4.5:1 on white and light-gray inputs */
+  input::placeholder,
+  textarea::placeholder {
+    color: #4b5563;
+    opacity: 1;
+  }
+
+  /* Clearly visible keyboard focus indicator (>= 3:1 against white and light grays) */
+  :where(a, button, input, select, textarea, summary, [tabindex], [role='button']):focus-visible {
+    outline: 3px solid #1d4ed8;
+    outline-offset: 2px;
+  }
+}
+
+/* "Skip to main content" — hidden until it receives keyboard focus */
+.skip-link {
+  position: absolute;
+  left: 0.5rem;
+  top: -100px;
+  z-index: 100;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  background: #111827;
+  color: #ffffff;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0.5rem;
+  outline: 3px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+/* Respect users who ask the OS to reduce motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skip-link targets receive programmatic focus; no outline needed on the whole region */
+main[tabindex='-1']:focus {
+  outline: none;
+}

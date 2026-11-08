@@ -54,7 +54,7 @@ export default function NotFound() {
   }, [missingPath]);
 
   return (
-    <div className="flex sm:w-full w-screen sm:min-w-[850px] flex-col">
+    <main id="main-content" tabIndex={-1} className="flex sm:w-full w-screen sm:min-w-[850px] flex-col">
       <div className="flex w-full items-center gap-2 p-5">
         <button
           type="button"
@@ -86,7 +86,7 @@ export default function NotFound() {
             />
           </svg>
         </button>
-        <div className="flex flex-row divide-x divide-gray-200 rounded-[8px] h-8 w-[300px] border border-gray-200 bg-gray-50 text-gray-500">
+        <div className="flex flex-row divide-x divide-gray-200 rounded-[8px] h-8 w-[300px] border border-gray-200 bg-gray-50 text-gray-600">
           <div className="flex items-center px-[14px] py-[5px]">
             <span>/</span>
           </div>
@@ -107,7 +107,7 @@ export default function NotFound() {
           Uh-oh! This page doesn&apos;t exist (yet).
         </h1>
 
-        <p className="pt-4 pb-12 px-2 text-gray-500">
+        <p className="pt-4 pb-12 px-2 text-gray-600">
           Looks like &quot;<span className="font-bold">/{missingPath}</span>
           &quot; isn&apos;t part of your project. But no worries, you&apos;ve got options!
         </p>
@@ -116,7 +116,7 @@ export default function NotFound() {
           <div className="flex flex-row justify-center items-center w-full max-w-[800px] mx-auto border border-gray-200 rounded-lg p-[20px] mb-[40px] gap-[20px]">
             <div className="flex flex-col gap-[5px] items-start self-start w-1/2">
               <p className="text-sm text-black text-left">Build it from scratch</p>
-              <p className="text-sm text-gray-500 text-left">
+              <p className="text-sm text-gray-600 text-left">
                 Create a new page to live at &quot;
                 <span>/{missingPath}</span>&quot;
               </p>
@@ -136,14 +136,14 @@ export default function NotFound() {
         {siteMap?.webPages && siteMap.webPages.length > 0 && (
           <>
             <div className="pb-20 lg:pb-[80px]">
-              <p className="flex items-center text-gray-500">
+              <p className="flex items-center text-gray-600">
                 Check out all your project&apos;s routes here &darr;
               </p>
             </div>
 
             <div className="flex flex-col justify-center items-center w-full px-[50px]">
               <div className="flex flex-col justify-between items-center w-full max-w-[600px] gap-[10px]">
-                <p className="text-sm text-gray-300 pb-[10px] self-start p-4">PAGES</p>
+                <p className="text-sm text-gray-600 pb-[10px] self-start p-4">PAGES</p>
                 {siteMap.webPages.map((route) => (
                   <button
                     type="button"
@@ -151,8 +151,8 @@ export default function NotFound() {
                     key={route.id}
                     className="flex flex-row justify-between text-center items-center p-4 rounded-lg bg-white shadow-sm w-full hover:bg-gray-50"
                   >
-                    <h3 className="font-medium text-gray-900">{route.name}</h3>
-                    <p className="text-sm text-gray-400">{route.cleanRoute}</p>
+                    <h2 className="font-medium text-gray-900">{route.name}</h2>
+                    <p className="text-sm text-gray-600">{route.cleanRoute}</p>
                   </button>
                 ))}
               </div>
@@ -160,6 +160,6 @@ export default function NotFound() {
           </>
         )}
       </div>
-    </div>
+    </main>
   );
 }

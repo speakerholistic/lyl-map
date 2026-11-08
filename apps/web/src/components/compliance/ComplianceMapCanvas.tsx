@@ -18,6 +18,7 @@ import type {
   OwnershipChain,
 } from '@/data/layerTypes';
 import type { StateBounds } from '@/data/stateBounds';
+import { prefersReducedMotion } from '@/utils/useDialogFocus';
 
 /** Stable type for the Google Maps instance without relying on the global google namespace */
 type GMap = NonNullable<ReturnType<typeof useMap>>;
@@ -147,10 +148,18 @@ function FacilityMarker({
         : '● Clean Record';
   const statusColor =
     property.status === 'critical'
-      ? '#DC2626'
+      ? '#B91C1C'
       : property.status === 'warning'
         ? '#B45309'
-        : '#16A34A';
+        : '#15803D';
+  // Accessible name for the pin (Google renders it as a role="button" element)
+  const statusText =
+    property.status === 'critical'
+      ? 'serious violations'
+      : property.status === 'warning'
+        ? 'citations found'
+        : 'clean record';
+  const pinLabel = `${property.name}, ${property.city}, ${property.state}: ${statusText}`;
 
   return (
     <>
@@ -162,6 +171,7 @@ function FacilityMarker({
           anchor,
         }}
         zIndex={selected ? 100 : 10}
+        title={pinLabel}
         onClick={() => {
           onPinClick(property);
           setOpen((v) => !v);
@@ -180,11 +190,14 @@ function FacilityMarker({
             }}
           >
             <p style={{ fontWeight: 600, margin: '0 0 3px', color: '#111827' }}>{property.name}</p>
-            <p style={{ margin: '0 0 3px', color: '#6B7280' }}>
+            <p style={{ margin: '0 0 3px', color: '#4B5563' }}>
               {property.city}, {property.state} · {property.citationCount} citation
               {property.citationCount !== 1 ? 's' : ''}
             </p>
-            <p style={{ margin: 0, fontWeight: 500, color: statusColor }}>{statusLabel}</p>
+            <p style={{ margin: 0, fontWeight: 500, color: statusColor }}>
+              <span aria-hidden="true">{statusLabel.slice(0, 2)}</span>
+              {statusLabel.slice(2)}
+            </p>
           </div>
         </InfoWindow>
       )}
@@ -205,10 +218,10 @@ function MedicalMarker({ provider }: { provider: MedicalProvider }) {
         : '♥ Hospice Provider';
   const typeColor =
     provider.providerType === 'hospital'
-      ? '#DC2626'
+      ? '#B91C1C'
       : provider.providerType === 'home_health'
-        ? '#2563EB'
-        : '#9333EA';
+        ? '#1D4ED8'
+        : '#7E22CE';
 
   return (
     <>
@@ -220,6 +233,8 @@ function MedicalMarker({ provider }: { provider: MedicalProvider }) {
           anchor: { x: 11, y: 11, equals: () => false },
         }}
         zIndex={5}
+        title={`${provider.name}, ${typeLabel.slice(2)}`}
+        onClick={() => setOpen((v) => !v)}
         onMouseOver={() => setOpen(true)}
         onMouseOut={() => setOpen(false)}
       />
@@ -234,13 +249,13 @@ function MedicalMarker({ provider }: { provider: MedicalProvider }) {
             }}
           >
             <p style={{ fontWeight: 600, margin: '0 0 3px', color: '#111827' }}>{provider.name}</p>
-            <p style={{ margin: '0 0 3px', color: '#6B7280' }}>
+            <p style={{ margin: '0 0 3px', color: '#4B5563' }}>
               {provider.city}, {provider.state}
               {provider.county ? ` · ${provider.county}` : ''}
             </p>
             <p style={{ margin: 0, fontWeight: 500, color: typeColor }}>{typeLabel}</p>
             {provider.nonprofit && (
-              <p style={{ margin: '2px 0 0', color: '#059669', fontSize: 11 }}>
+              <p style={{ margin: '2px 0 0', color: '#047857', fontSize: 11 }}>
                 Non-Profit Provider
               </p>
             )}
@@ -261,6 +276,13 @@ function MobilityMarker({ zone }: { zone: MobilityRiskZone }) {
       : zone.deconditioningScore > 50
         ? '#F59E0B'
         : '#10B981';
+  // Darker shade of the same hue for text so it meets 4.5:1 on white
+  const textColor =
+    zone.deconditioningScore > 70
+      ? '#B91C1C'
+      : zone.deconditioningScore > 50
+        ? '#B45309'
+        : '#047857';
   const iconUrl = svgUri(
     `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20"><circle cx="10" cy="10" r="7" fill="${color}" fill-opacity="0.7" stroke="white" stroke-width="2"/></svg>`
   );
@@ -275,6 +297,8 @@ function MobilityMarker({ zone }: { zone: MobilityRiskZone }) {
           anchor: { x: 10, y: 10, equals: () => false },
         }}
         zIndex={2}
+        title={`${zone.countyName}: fall and mobility risk score ${zone.deconditioningScore} out of 100`}
+        onClick={() => setOpen((v) => !v)}
         onMouseOver={() => setOpen(true)}
         onMouseOut={() => setOpen(false)}
       />
@@ -291,10 +315,10 @@ function MobilityMarker({ zone }: { zone: MobilityRiskZone }) {
             <p style={{ fontWeight: 600, margin: '0 0 3px', color: '#111827' }}>
               {zone.countyName}
             </p>
-            <p style={{ margin: '0 0 3px', fontWeight: 500, color }}>
+            <p style={{ margin: '0 0 3px', fontWeight: 500, color: textColor }}>
               Fall & Mobility Risk Score: {zone.deconditioningScore}/100
             </p>
-            <p style={{ margin: 0, color: '#6B7280' }}>
+            <p style={{ margin: 0, color: '#4B5563' }}>
               {zone.pctOver65}% age 65+ · {zone.pctMobilityLimited}% with mobility challenges
             </p>
           </div>
@@ -323,6 +347,8 @@ function DensityMarker({ cluster }: { cluster: DensityCluster }) {
           anchor: { x: 18, y: 18, equals: () => false },
         }}
         zIndex={3}
+        title={`Density cluster: ${cluster.count} care homes, ${cluster.criticalCount} with critical violations`}
+        onClick={() => setOpen((v) => !v)}
         onMouseOver={() => setOpen(true)}
         onMouseOut={() => setOpen(false)}
       />
@@ -337,10 +363,10 @@ function DensityMarker({ cluster }: { cluster: DensityCluster }) {
             }}
           >
             <p style={{ fontWeight: 600, margin: '0 0 3px', color: '#111827' }}>Density Cluster</p>
-            <p style={{ margin: '0 0 3px', color: '#6B7280' }}>
+            <p style={{ margin: '0 0 3px', color: '#4B5563' }}>
               {cluster.count} care homes in region
             </p>
-            <p style={{ margin: 0, color: hasCritical ? '#DC2626' : '#6B7280' }}>
+            <p style={{ margin: 0, color: hasCritical ? '#B91C1C' : '#4B5563' }}>
               {cluster.criticalCount} critical violations
             </p>
           </div>
@@ -400,6 +426,12 @@ function MapController({
       map.fitBounds(b, 24);
       return;
     }
+    if (prefersReducedMotion()) {
+      // No animated pan for users who asked the OS to reduce motion
+      map.setCenter({ lat: focusTarget.lat, lng: focusTarget.lng });
+      map.setZoom(focusTarget.zoom);
+      return;
+    }
     map.panTo({ lat: focusTarget.lat, lng: focusTarget.lng });
     // slight delay so panTo starts before zoom kicks in — feels smoother
     const t = setTimeout(() => map.setZoom(focusTarget.zoom), 120);
@@ -427,6 +459,8 @@ function StatInset({
 
   return (
     <div
+      role="region"
+      aria-label={`${label === 'AK' ? 'Alaska' : label === 'HI' ? 'Hawaii' : label} care homes`}
       style={{
         position: 'absolute',
         ...style,
@@ -453,26 +487,32 @@ function StatInset({
         {label}
       </span>
       {properties.length === 0 ? (
-        <span style={{ fontSize: 10, color: '#94a3b8' }}>No care homes</span>
+        <span style={{ fontSize: 10, color: '#475569' }}>No care homes</span>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {clean > 0 && (
-            <span style={{ fontSize: 10, color: '#16a34a', fontWeight: 600 }}>● {clean} Clean</span>
+            <span style={{ fontSize: 10, color: '#15803d', fontWeight: 600 }}>
+              <span aria-hidden="true">● </span>
+              {clean} Clean
+            </span>
           )}
           {warning > 0 && (
             <span style={{ fontSize: 10, color: '#b45309', fontWeight: 600 }}>
-              ▲ {warning} Citation{warning !== 1 ? 's' : ''}
+              <span aria-hidden="true">▲ </span>
+              {warning} Citation{warning !== 1 ? 's' : ''}
             </span>
           )}
           {critical > 0 && (
-            <span style={{ fontSize: 10, color: '#dc2626', fontWeight: 600 }}>
-              ⬡ {critical} Critical
+            <span style={{ fontSize: 10, color: '#b91c1c', fontWeight: 600 }}>
+              <span aria-hidden="true">⬡ </span>
+              {critical} Critical
             </span>
           )}
           {/* Clickable list of facilities */}
           <div style={{ marginTop: 2, display: 'flex', flexDirection: 'column', gap: 1 }}>
             {properties.slice(0, 4).map((p) => (
               <button
+                type="button"
                 key={p.id}
                 onClick={() => onPinClick(p)}
                 style={{
@@ -493,7 +533,7 @@ function StatInset({
               </button>
             ))}
             {properties.length > 4 && (
-              <span style={{ fontSize: 9, color: '#94a3b8' }}>+{properties.length - 4} more</span>
+              <span style={{ fontSize: 9, color: '#475569' }}>+{properties.length - 4} more</span>
             )}
           </div>
         </div>
@@ -664,6 +704,7 @@ export default function ComplianceMapCanvas({
             }}
           >
             <button
+              type="button"
               onClick={handleMyLocation}
               disabled={locating}
               title="Zoom to my location"
@@ -675,11 +716,14 @@ export default function ComplianceMapCanvas({
                 opacity: locating ? 0.7 : 1,
               }}
             >
-              <span style={{ fontSize: 14 }}>📍</span>
-              {locating ? 'Locating…' : 'My Location'}
+              <span style={{ fontSize: 14 }} aria-hidden="true">
+                📍
+              </span>
+              <span aria-live="polite">{locating ? 'Locating…' : 'My Location'}</span>
             </button>
 
             <button
+              type="button"
               onClick={handleZoomOut}
               title="Zoom out to see all care homes"
               style={{
@@ -689,12 +733,15 @@ export default function ComplianceMapCanvas({
                 color: '#1d4ed8',
               }}
             >
-              <span style={{ fontSize: 14 }}>🗺</span>
+              <span style={{ fontSize: 14 }} aria-hidden="true">
+                🗺
+              </span>
               Zoom Out
             </button>
 
             {selectedId && (
               <button
+                type="button"
                 onClick={handleReset}
                 title="Deselect care home and reset view"
                 style={{
@@ -704,7 +751,9 @@ export default function ComplianceMapCanvas({
                   color: '#c2410c',
                 }}
               >
-                <span style={{ fontSize: 14 }}>↺</span>
+                <span style={{ fontSize: 14 }} aria-hidden="true">
+                ↺
+              </span>
                 Reset View
               </button>
             )}

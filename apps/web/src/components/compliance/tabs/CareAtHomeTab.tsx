@@ -46,7 +46,7 @@ export default function CareAtHomeTab() {
     <div className="flex flex-col gap-5">
       <div>
         <h3 className="text-base font-semibold text-gray-900">Private Caregiver Wage Benchmark</h3>
-        <p className="text-sm text-gray-500 mt-1">
+        <p className="text-sm text-gray-600 mt-1">
           Direct-hire rates vs. agency markups — and how they compare to care home monthly fees.
         </p>
       </div>
@@ -66,10 +66,10 @@ export default function CareAtHomeTab() {
 
       <div className="border border-gray-200 rounded-xl overflow-hidden">
         <div className="grid grid-cols-4 bg-gray-50 border-b border-gray-200 px-3 py-2">
-          <span className="text-xs font-semibold text-gray-500">Region</span>
-          <span className="text-xs font-semibold text-gray-500">Direct Hire</span>
-          <span className="text-xs font-semibold text-gray-500">Agency Rate</span>
-          <span className="text-xs font-semibold text-gray-500">Markup</span>
+          <span className="text-xs font-semibold text-gray-600">Region</span>
+          <span className="text-xs font-semibold text-gray-600">Direct Hire</span>
+          <span className="text-xs font-semibold text-gray-600">Agency Rate</span>
+          <span className="text-xs font-semibold text-gray-600">Markup</span>
         </div>
         {regionData.map((row, i) => (
           <div
@@ -79,7 +79,7 @@ export default function CareAtHomeTab() {
             <span className="text-xs font-semibold text-gray-900">{row.region}</span>
             <span className="text-xs text-gray-600">{row.directRate}</span>
             <span className="text-xs text-gray-600">{row.agencyRate}</span>
-            <span className="text-xs font-semibold text-orange-600">{row.markup}</span>
+            <span className="text-xs font-semibold text-orange-700">{row.markup}</span>
           </div>
         ))}
       </div>
@@ -87,8 +87,7 @@ export default function CareAtHomeTab() {
       <div className="flex flex-col gap-2">
         <a
           href={KAJABI_URLS.module15}
-          target="_blank"
-          rel="noopener noreferrer"
+          target="_top"
           className="inline-flex items-center gap-1.5 bg-[#2563EB] text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-blue-700 transition-colors"
         >
           Module 15: Private Caregiver Employment Shield
@@ -96,8 +95,7 @@ export default function CareAtHomeTab() {
         </a>
         <a
           href={KAJABI_URLS.module16}
-          target="_blank"
-          rel="noopener noreferrer"
+          target="_top"
           className="inline-flex items-center gap-1.5 bg-[#EFF6FF] text-blue-600 text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-blue-100 transition-colors border border-blue-100"
         >
           Module 16: Shift-Change Compliance Trackers

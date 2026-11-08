@@ -203,7 +203,7 @@ export default function AdminSyncPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
       <style jsx global>{`
         @keyframes spin {
           from {
@@ -225,7 +225,7 @@ export default function AdminSyncPage() {
           </div>
           <div>
             <h1 className="text-lg font-semibold text-gray-900">CareGuard Admin</h1>
-            <p className="text-xs text-gray-500">CMS Real Data Sync — All 14,695 Nursing Homes</p>
+            <p className="text-xs text-gray-600">CMS Real Data Sync — All 14,695 Nursing Homes</p>
           </div>
         </div>
 
@@ -233,18 +233,18 @@ export default function AdminSyncPage() {
         {status && (
           <div className="grid grid-cols-2 gap-3 mb-5">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center gap-2">
-              <Database size={14} className="text-gray-400" />
+              <Database size={14} className="text-gray-600" />
               <div>
-                <p className="text-xs text-gray-500">In Database</p>
+                <p className="text-xs text-gray-600">In Database</p>
                 <p className="text-sm font-semibold text-gray-900">
                   {status.totalInDB?.toLocaleString() ?? '—'} care homes
                 </p>
               </div>
             </div>
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 flex items-center gap-2">
-              <Globe size={14} className="text-gray-400" />
+              <Globe size={14} className="text-gray-600" />
               <div>
-                <p className="text-xs text-gray-500">CMS National</p>
+                <p className="text-xs text-gray-600">CMS National</p>
                 <p className="text-sm font-semibold text-gray-900">~14,695 care homes</p>
               </div>
             </div>
@@ -296,7 +296,7 @@ export default function AdminSyncPage() {
             <div className="w-full border-t border-gray-200" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-white px-2 text-xs text-gray-400">or sync a specific state</span>
+            <span className="bg-white px-2 text-xs text-gray-600">or sync a specific state</span>
           </div>
         </div>
 
@@ -318,7 +318,7 @@ export default function AdminSyncPage() {
             </select>
           </div>
           {!stateFilter && (
-            <p className="text-xs text-gray-400 mt-1">
+            <p className="text-xs text-gray-600 mt-1">
               ⚠ Full national sync may timeout in dev — use single state or Quick Demo instead.
             </p>
           )}
@@ -348,7 +348,7 @@ export default function AdminSyncPage() {
           >
             <div className="flex items-start gap-2">
               {result.success ? (
-                <CheckCircle size={16} className="text-green-600 mt-0.5 flex-shrink-0" />
+                <CheckCircle size={16} className="text-green-700 mt-0.5 flex-shrink-0" />
               ) : (
                 <AlertCircle size={16} className="text-red-600 mt-0.5 flex-shrink-0" />
               )}
@@ -365,7 +365,7 @@ export default function AdminSyncPage() {
                       {result.inserted?.toLocaleString()} care homes written to database
                     </p>
                     {result.skipped !== undefined && result.skipped > 0 && (
-                      <p className="text-xs text-gray-500">
+                      <p className="text-xs text-gray-600">
                         {result.skipped.toLocaleString()} skipped (missing coordinates)
                       </p>
                     )}
@@ -386,7 +386,7 @@ export default function AdminSyncPage() {
 
         <div className="mt-6 pt-5 border-t border-gray-200 flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <a href="/" className="text-xs text-gray-500 hover:text-gray-700 transition-colors">
+            <a href="/" className="text-xs text-gray-600 hover:text-gray-900 transition-colors">
               ← Back to Map
             </a>
             <a
@@ -396,11 +396,11 @@ export default function AdminSyncPage() {
               Admin Guide →
             </a>
           </div>
-          <span className="text-xs text-gray-400">
+          <span className="text-xs text-gray-600">
             data.cms.gov/provider-data/dataset/4pq5-n9py
           </span>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

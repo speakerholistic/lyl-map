@@ -55,7 +55,7 @@ export default function TabSidebar({ mobile = false }: TabSidebarProps) {
             onClick={() => setOpen((o) => !o)}
             aria-expanded={open}
             className={`flex-1 flex items-center justify-center gap-2 py-3.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
-              open ? 'bg-blue-50 text-blue-700' : 'text-gray-500 hover:bg-gray-50'
+              open ? 'bg-blue-50 text-blue-700' : 'text-gray-600 hover:bg-gray-50'
             }`}
           >
             <Stethoscope size={18} />
@@ -69,7 +69,7 @@ export default function TabSidebar({ mobile = false }: TabSidebarProps) {
                 setOpen(false);
                 setActiveTab(null);
               }}
-              className="px-4 py-3.5 border-l border-gray-100 text-gray-400 hover:bg-gray-50"
+              className="px-4 py-3.5 border-l border-gray-100 text-gray-600 hover:bg-gray-50"
               aria-label="Close"
             >
               <XIcon size={14} />
@@ -118,7 +118,7 @@ export default function TabSidebar({ mobile = false }: TabSidebarProps) {
         </div>
         <div>
           <p className="text-sm font-bold text-gray-900">Situational Guide</p>
-          <p className="text-[10px] text-gray-400">Answer 3 questions to find your module</p>
+          <p className="text-[10px] text-gray-600">Answer 3 questions to find your module</p>
         </div>
       </div>
 
