@@ -3,8 +3,7 @@
 import { useState } from 'react';
 import { AlertTriangle, ArrowRight, Shield, Loader2 } from 'lucide-react';
 import LocationAutocomplete from '@/components/LocationAutocomplete';
-
-const SHOP_URL = process.env.NEXT_PUBLIC_SHOP_URL ?? '#';
+import { SHOP_URL } from '@/lib/kajabi';
 
 const careOptions = [
   { value: 'Assisted Living', label: 'Assisted Living — help with daily tasks' },

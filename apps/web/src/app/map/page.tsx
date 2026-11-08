@@ -2,6 +2,7 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Shield,
   ExternalLink,
@@ -32,6 +33,9 @@ import EmailOptIn from '@/components/compliance/EmailOptIn';
 import MapLayerControls from '@/components/compliance/MapLayerControls';
 import LocationAutocomplete from '@/components/LocationAutocomplete';
 import TriageWizard from '@/components/compliance/TriageWizard';
+import type { FocusTarget } from '@/components/compliance/ComplianceMapCanvas';
+import { STATE_BOUNDS, STATE_CODES, isStateCode } from '@/data/stateBounds';
+import { DASHBOARD_URL } from '@/lib/kajabi';
 
 const ComplianceMapCanvas = dynamic(() => import('@/components/compliance/ComplianceMapCanvas'), {
   ssr: false,
@@ -47,59 +51,8 @@ function MapLoadingState() {
   );
 }
 
-// ─── State geographic centers + zoom levels ────────────────────────────────────
-const STATE_CENTERS: Record<string, { lat: number; lng: number; zoom: number }> = {
-  AL: { lat: 32.8, lng: -86.8, zoom: 7 },
-  AK: { lat: 64.2, lng: -153.4, zoom: 4 },
-  AZ: { lat: 34.3, lng: -111.1, zoom: 7 },
-  AR: { lat: 34.9, lng: -92.4, zoom: 7 },
-  CA: { lat: 36.8, lng: -119.4, zoom: 6 },
-  CO: { lat: 39.0, lng: -105.5, zoom: 7 },
-  CT: { lat: 41.6, lng: -72.7, zoom: 9 },
-  DE: { lat: 39.0, lng: -75.5, zoom: 9 },
-  FL: { lat: 27.8, lng: -81.6, zoom: 7 },
-  GA: { lat: 32.7, lng: -83.4, zoom: 7 },
-  HI: { lat: 20.3, lng: -156.4, zoom: 7 },
-  ID: { lat: 44.3, lng: -114.5, zoom: 6 },
-  IL: { lat: 40.0, lng: -89.2, zoom: 7 },
-  IN: { lat: 39.9, lng: -86.3, zoom: 7 },
-  IA: { lat: 42.0, lng: -93.2, zoom: 7 },
-  KS: { lat: 38.5, lng: -98.4, zoom: 7 },
-  KY: { lat: 37.5, lng: -85.3, zoom: 7 },
-  LA: { lat: 31.1, lng: -91.9, zoom: 7 },
-  ME: { lat: 45.4, lng: -69.0, zoom: 7 },
-  MD: { lat: 39.0, lng: -76.8, zoom: 8 },
-  MA: { lat: 42.3, lng: -71.8, zoom: 8 },
-  MI: { lat: 44.3, lng: -85.4, zoom: 7 },
-  MN: { lat: 46.4, lng: -93.1, zoom: 6 },
-  MS: { lat: 32.7, lng: -89.7, zoom: 7 },
-  MO: { lat: 38.5, lng: -92.5, zoom: 7 },
-  MT: { lat: 47.0, lng: -110.0, zoom: 6 },
-  NE: { lat: 41.5, lng: -99.9, zoom: 7 },
-  NV: { lat: 38.5, lng: -117.1, zoom: 7 },
-  NH: { lat: 43.7, lng: -71.6, zoom: 8 },
-  NJ: { lat: 40.1, lng: -74.5, zoom: 8 },
-  NM: { lat: 34.4, lng: -106.1, zoom: 7 },
-  NY: { lat: 42.9, lng: -75.5, zoom: 7 },
-  NC: { lat: 35.6, lng: -79.4, zoom: 7 },
-  ND: { lat: 47.5, lng: -100.5, zoom: 7 },
-  OH: { lat: 40.4, lng: -82.8, zoom: 7 },
-  OK: { lat: 35.6, lng: -97.5, zoom: 7 },
-  OR: { lat: 44.1, lng: -120.5, zoom: 7 },
-  PA: { lat: 40.9, lng: -77.8, zoom: 7 },
-  RI: { lat: 41.7, lng: -71.5, zoom: 10 },
-  SC: { lat: 33.9, lng: -80.9, zoom: 8 },
-  SD: { lat: 44.4, lng: -100.2, zoom: 7 },
-  TN: { lat: 35.9, lng: -86.4, zoom: 7 },
-  TX: { lat: 31.5, lng: -99.3, zoom: 6 },
-  UT: { lat: 39.3, lng: -111.1, zoom: 7 },
-  VT: { lat: 44.1, lng: -72.7, zoom: 8 },
-  VA: { lat: 37.8, lng: -79.5, zoom: 7 },
-  WA: { lat: 47.4, lng: -120.5, zoom: 7 },
-  WV: { lat: 38.7, lng: -80.6, zoom: 7 },
-  WI: { lat: 44.5, lng: -89.8, zoom: 7 },
-  WY: { lat: 43.0, lng: -107.6, zoom: 7 },
-};
+/** Default whole-US view (matches the map's initial center/zoom). */
+const US_VIEW: FocusTarget = { lat: 39.5, lng: -98.35, zoom: 4 };
 
 // ─── Tour steps ────────────────────────────────────────────────────────────────
 const TOUR_STEPS = [
@@ -297,58 +250,7 @@ const STATUS_FILTERS: { value: '' | ComplianceStatus; label: string }[] = [
   { value: 'critical', label: '⬡ Violations' },
 ];
 
-const US_STATES = [
-  'AL',
-  'AK',
-  'AZ',
-  'AR',
-  'CA',
-  'CO',
-  'CT',
-  'DE',
-  'FL',
-  'GA',
-  'HI',
-  'ID',
-  'IL',
-  'IN',
-  'IA',
-  'KS',
-  'KY',
-  'LA',
-  'ME',
-  'MD',
-  'MA',
-  'MI',
-  'MN',
-  'MS',
-  'MO',
-  'MT',
-  'NE',
-  'NV',
-  'NH',
-  'NJ',
-  'NM',
-  'NY',
-  'NC',
-  'ND',
-  'OH',
-  'OK',
-  'OR',
-  'PA',
-  'RI',
-  'SC',
-  'SD',
-  'TN',
-  'TX',
-  'UT',
-  'VT',
-  'VA',
-  'WA',
-  'WV',
-  'WI',
-  'WY',
-];
+const US_STATES = STATE_CODES;
 
 interface FetchResult {
   source: 'cms' | 'db' | 'mock';
@@ -428,9 +330,10 @@ export default function MapPage() {
   const [activeLayers, setActiveLayers] = useState<Set<LayerId>>(new Set());
   const [showTour, setShowTour] = useState(false);
   // Tracks where the map should auto-fly (state center or city centroid)
-  const [focusTarget, setFocusTarget] = useState<{ lat: number; lng: number; zoom: number } | null>(
-    null
-  );
+  const [focusTarget, setFocusTarget] = useState<FocusTarget | null>(null);
+  const router = useRouter();
+  // True once ?state= has been read from the URL, so we don't overwrite it first
+  const [urlLoaded, setUrlLoaded] = useState(false);
 
   // Fetch once the user has committed a city pick OR chosen a state
   const hasUserInput = !!(stateFilter || committedCity || searchQuery.trim());
@@ -445,12 +348,41 @@ export default function MapPage() {
     }
   }, []);
 
-  // ── Fly to state center when the state dropdown changes ──────────────────
+  // ── Read ?state= on load to preselect the state ───────────────────────────
   useEffect(() => {
-    if (!stateFilter) return;
-    const center = STATE_CENTERS[stateFilter];
-    if (center) setFocusTarget({ ...center });
-  }, [stateFilter]);
+    const fromUrl = new URLSearchParams(window.location.search).get('state');
+    if (isStateCode(fromUrl)) setStateFilter(fromUrl.toUpperCase());
+    setUrlLoaded(true);
+  }, []);
+
+  // ── Keep ?state= in the URL in sync with the dropdown ─────────────────────
+  useEffect(() => {
+    if (!urlLoaded) return;
+    const params = new URLSearchParams(window.location.search);
+    if ((params.get('state') ?? '') === stateFilter) return;
+    if (stateFilter) params.set('state', stateFilter);
+    else params.delete('state');
+    const qs = params.toString();
+    router.replace(`${window.location.pathname}${qs ? `?${qs}` : ''}${window.location.hash}`, {
+      scroll: false,
+    });
+  }, [stateFilter, urlLoaded, router]);
+
+  // ── Fit the map to the selected state; "All states" returns to the US view ─
+  useEffect(() => {
+    if (!urlLoaded) return;
+    const b = stateFilter ? STATE_BOUNDS[stateFilter] : undefined;
+    if (b) {
+      setFocusTarget({
+        lat: (b.south + b.north) / 2,
+        lng: (b.west + b.east) / 2,
+        zoom: 7,
+        bounds: b,
+      });
+    } else {
+      setFocusTarget({ ...US_VIEW });
+    }
+  }, [stateFilter, urlLoaded]);
 
   const closeTour = useCallback(() => {
     setShowTour(false);
@@ -596,8 +528,16 @@ export default function MapPage() {
             aria-label="Back to home"
           >
             <ArrowLeft size={13} />
-            <span className="hidden sm:inline">Home</span>
+            <span>Home</span>
           </Link>
+          {DASHBOARD_URL && (
+            <a
+              href={DASHBOARD_URL}
+              className="hidden sm:inline-flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition-colors mr-1"
+            >
+              Back to my dashboard
+            </a>
+          )}
           <div className="w-7 h-7 bg-[#2563EB] rounded-lg flex items-center justify-center flex-shrink-0">
             <Shield size={14} className="text-white" />
           </div>
@@ -707,7 +647,7 @@ export default function MapPage() {
               }
               className="py-2 pl-2.5 pr-6 text-xs text-gray-700 bg-gray-50 border border-gray-200 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 cursor-pointer"
             >
-              <option value="">State ▾</option>
+              <option value="">{stateFilter ? 'All states' : 'State ▾'}</option>
               {US_STATES.map((s) => (
                 <option key={s} value={s}>
                   {s}
@@ -839,18 +779,20 @@ export default function MapPage() {
         className="relative flex-shrink-0"
         style={{ height: 'clamp(360px, 55vw, 620px)', minHeight: 320 }}
       >
-        {isLoading ? (
-          <MapLoadingState />
-        ) : (
-          <ComplianceMapCanvas
-            properties={visibleProperties}
-            onPinClick={handlePinClick}
-            selectedId={selectedProperty?.id ?? null}
-            activeLayers={activeLayers}
-            layerData={layerData}
-            onReset={() => setSelectedProperty(null)}
-            focusTarget={focusTarget}
-          />
+        {/* Map stays mounted while data loads so it keeps its position/zoom */}
+        <ComplianceMapCanvas
+          properties={visibleProperties}
+          onPinClick={handlePinClick}
+          selectedId={selectedProperty?.id ?? null}
+          activeLayers={activeLayers}
+          layerData={layerData}
+          onReset={() => setSelectedProperty(null)}
+          focusTarget={focusTarget}
+        />
+        {isLoading && (
+          <div className="absolute inset-0 z-20">
+            <MapLoadingState />
+          </div>
         )}
 
         {/* ── Journey steps — vertical overlay, left side of map ── */}
@@ -859,7 +801,6 @@ export default function MapPage() {
             { n: '1', label: 'Explore Map', href: '#filter-bar', dot: 'bg-blue-500' },
             { n: '2', label: 'Compare', href: '#compare', dot: 'bg-purple-500' },
             { n: '3', label: 'Assess Needs', href: '#assess', dot: 'bg-green-500' },
-            { n: '4', label: 'Recommendations', href: '#assess', dot: 'bg-yellow-500' },
           ].map((s) => (
             <a
               key={s.n}
@@ -1021,7 +962,7 @@ export default function MapPage() {
             {/* Wizard */}
             <div className="lg:col-span-2">
               <div className="bg-white border border-gray-200 rounded-2xl p-5 md:p-6 shadow-sm">
-                <TriageWizard onTabActivate={() => {}} />
+                <TriageWizard onTabActivate={() => {}} selectedState={stateFilter} />
               </div>
             </div>
 

@@ -25,9 +25,22 @@ import ws from 'ws';
 
 neonConfig.webSocketConstructor = ws;
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
-});
+/**
+ * Better Auth is created lazily (on first use inside an auth/admin route) so
+ * public pages never initialize it. When BETTER_AUTH_SECRET is missing we
+ * throw AuthNotConfiguredError synchronously, which callers turn into a 503,
+ * instead of letting better-auth raise an unhandled promise rejection that
+ * crashes the whole server function.
+ */
+export class AuthNotConfiguredError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'AuthNotConfiguredError';
+  }
+}
+
+// Netlify provides URL (primary site URL) and DEPLOY_PRIME_URL automatically.
+const baseURL = process.env.BETTER_AUTH_URL || process.env.URL || undefined;
 
 // Origins we accept auth requests from. Include every URL the app may be
 // served under so better-auth's CSRF check doesn't reject legitimate requests
@@ -42,6 +55,8 @@ const trustedOrigins = Array.from(
   new Set(
     [
       process.env.BETTER_AUTH_URL,
+      process.env.URL,
+      process.env.DEPLOY_PRIME_URL,
       process.env.EXPO_PUBLIC_PROXY_BASE_URL,
       process.env.NEXT_PUBLIC_CREATE_BASE_URL,
       process.env.NEXT_PUBLIC_CREATE_HOST ? `https://${process.env.NEXT_PUBLIC_CREATE_HOST}` : null,
@@ -97,8 +112,13 @@ async function verifyCompatiblePassword({ hash, password }: { hash: string; pass
   });
 }
 
-export const auth = betterAuth({
-  database: pool,
+function createAuth() {
+  return betterAuth({
+  baseURL,
+  secret: process.env.BETTER_AUTH_SECRET,
+  database: new Pool({
+    connectionString: process.env.DATABASE_URL,
+  }),
   trustedOrigins,
   socialProviders,
   emailAndPassword: {
@@ -156,6 +176,49 @@ export const auth = betterAuth({
   // carry cookies through a WebView) authenticate API calls with the token
   // returned from /api/auth/token.
   plugins: [bearer()],
-});
+  });
+}
 
-export type Session = typeof auth.$Infer.Session;
+type Auth = ReturnType<typeof createAuth>;
+let authInstance: Auth | null = null;
+
+/** Returns the Better Auth instance, creating it on first call. */
+export function getAuth(): Auth {
+  if (authInstance) return authInstance;
+  if (!process.env.BETTER_AUTH_SECRET) {
+    throw new AuthNotConfiguredError(
+      'Admin login is not configured: BETTER_AUTH_SECRET is not set.'
+    );
+  }
+  const instance = createAuth();
+  // better-auth initializes its context asynchronously; make sure a failure
+  // there can never surface as an unhandled rejection.
+  Promise.resolve(instance.$context).catch((err) => {
+    console.error('[auth] Better Auth failed to initialize:', err);
+    authInstance = null;
+  });
+  authInstance = instance;
+  return instance;
+}
+
+/** Runs `fn` with the auth instance; returns a 503 when auth is not configured or fails. */
+export async function withAuth(fn: (auth: Auth) => Promise<Response> | Response): Promise<Response> {
+  try {
+    return await fn(getAuth());
+  } catch (err) {
+    const notConfigured =
+      err instanceof AuthNotConfiguredError ||
+      (err instanceof Error && /default secret|BETTER_AUTH_SECRET/i.test(err.message));
+    console.error('[auth]', err);
+    return Response.json(
+      {
+        error: notConfigured
+          ? 'Login is temporarily unavailable (auth not configured).'
+          : 'Authentication error',
+      },
+      { status: notConfigured ? 503 : 500 }
+    );
+  }
+}
+
+export type Session = Auth['$Infer']['Session'];

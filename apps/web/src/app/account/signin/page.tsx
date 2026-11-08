@@ -100,6 +100,9 @@ function SignInForm() {
         >
           No account? Sign up
         </a>
+        <a href="/" className="text-center text-[13px] text-gray-500 hover:underline">
+          ← Back to home
+        </a>
       </form>
     </main>
   );

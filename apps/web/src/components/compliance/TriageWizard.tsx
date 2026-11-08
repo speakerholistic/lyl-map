@@ -20,8 +20,7 @@ import {
   type Q3Addressee,
 } from '@/data/triageData';
 import { matchTrack, matchModuleIds, matchAddressee } from '@/data/triageMatching';
-
-const SHOP_URL = process.env.NEXT_PUBLIC_SHOP_URL ?? '#';
+import { SHOP_URL } from '@/lib/kajabi';
 
 // Plain-language display names for the matched Q3 addressee
 const ADDRESSEE_LABELS: Record<string, string> = {
@@ -134,12 +133,25 @@ type Step = 'q1' | 'q2' | 'result';
 
 interface TriageWizardProps {
   onTabActivate: (tab: TabDestination) => void;
+  /** State picked on the map (e.g. "TN") — kept and shown through every step. */
+  selectedState?: string;
+}
+
+// Shows which state the results apply to, so the map selection carries through the form.
+function StateChip({ state }: { state?: string }) {
+  if (!state) return null;
+  return (
+    <span className="inline-flex items-center gap-1 self-start bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-2.5 py-1 text-[10px] font-semibold">
+      <MapPin size={10} />
+      State: {state}
+    </span>
+  );
 }
 
 const TEXTAREA_CLASS =
   'w-full px-3 py-2.5 text-xs text-gray-900 bg-white border border-gray-200 rounded-xl resize-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600';
 
-export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
+export default function TriageWizard({ onTabActivate, selectedState }: TriageWizardProps) {
   const [step, setStep] = useState<Step>('q1');
   const [q1Text, setQ1Text] = useState('');
   const [q2Text, setQ2Text] = useState('');
@@ -178,7 +190,8 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
     return (
       <div className="flex flex-col gap-2.5">
         <div className="mb-1">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+          <StateChip state={selectedState} />
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 mt-1">
             Step 1 of 3
           </p>
           <label htmlFor="triage-q1" className="block text-sm font-bold text-gray-900">
@@ -221,7 +234,8 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
             <ArrowLeft size={13} />
           </button>
           <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">
+            <StateChip state={selectedState} />
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5 mt-1">
               Step 2 of 3
             </p>
             <label htmlFor="triage-q2" className="block text-sm font-bold text-gray-900">
@@ -273,7 +287,8 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
           <ArrowLeft size={13} />
         </button>
         <div>
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">
+          <StateChip state={selectedState} />
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5 mt-1">
             Step 3 of 3
           </p>
           <h3 className="text-sm font-bold text-gray-900">

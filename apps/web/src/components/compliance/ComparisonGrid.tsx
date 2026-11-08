@@ -147,10 +147,6 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
-            <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 rounded-full px-3 py-1.5 text-sm font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-              Direct Comparison Tool
-            </div>
             {locationLabel && (
               <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-3 py-1.5 text-xs font-medium">
                 <MapPin size={11} />

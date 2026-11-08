@@ -150,6 +150,9 @@ function SocialDevShim() {
           >
             {loading ? 'Signing in…' : `Continue as ${label} user`}
           </button>
+          <a href="/" className="text-center text-[13px] text-gray-500 hover:underline">
+            ← Back to home
+          </a>
         </form>
       </div>
     </main>

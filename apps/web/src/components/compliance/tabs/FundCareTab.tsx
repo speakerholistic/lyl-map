@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { DollarSign, AlertTriangle, ArrowRight } from 'lucide-react';
-
-const SHOP_URL = process.env.NEXT_PUBLIC_SHOP_URL ?? '#';
+import { SHOP_URL } from '@/lib/kajabi';
 
 export default function FundCareTab() {
   const [liquidSavings, setLiquidSavings] = useState('');
