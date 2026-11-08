@@ -26,14 +26,14 @@ const steps = [
     num: 1,
     icon: <Map size={22} className="text-blue-600" />,
     title: 'Choose a State',
-    desc: "Use the state dropdown in the top filter bar to zoom into a specific state. The map will load live data from the federal government's nursing home database for that state — thousands of real care facilities.",
+    desc: "Use the state dropdown in the top filter bar to zoom into a specific state. The map will load live data from the federal government's nursing home database for that state — thousands of real care homes.",
     tip: 'Tip: Start with your own state or the state where a loved one lives.',
   },
   {
     num: 2,
     icon: <Search size={22} className="text-blue-600" />,
-    title: 'Search by Facility Name or City',
-    desc: 'Type any facility name, city, or state in the search bar — spelling suggestions will appear as you type to help you find the right place quickly.',
+    title: 'Search by Care Home Name or City',
+    desc: 'Type any care home name, city, or state in the search bar — spelling suggestions will appear as you type to help you find the right place quickly.',
     tip: 'Tip: Partial names work — try typing just the first few letters.',
   },
   {
@@ -41,13 +41,13 @@ const steps = [
     icon: <Filter size={22} className="text-blue-600" />,
     title: 'Filter by Compliance Status',
     desc: 'Use the status filter buttons (All / Clean / Citations / Violations) to narrow results. Each status corresponds to a pin shape on the map — circles (clean), triangles (citations), and hexagons (violations).',
-    tip: 'Tip: Start with "Violations" to identify the highest-risk facilities first.',
+    tip: 'Tip: Start with "Violations" to identify the highest-risk care homes first.',
   },
   {
     num: 4,
     icon: <MousePointerClick size={22} className="text-blue-600" />,
     title: 'Click a Pin to Open the Profile',
-    desc: 'Click any pin on the map to open the full Facility Profile Panel on the right side. This panel shows the compliance history, staffing ratios, quality measures, financial data, and corporate ownership chain.',
+    desc: 'Click any pin on the map to open the full Care Home Profile Panel on the right side. This panel shows the compliance history, staffing ratios, quality measures, financial data, and corporate ownership chain.',
     tip: 'Tip: Hover over any pin first to see a quick summary before clicking.',
   },
   {
@@ -55,20 +55,20 @@ const steps = [
     icon: <Layers size={22} className="text-blue-600" />,
     title: 'Turn On Data Layers',
     desc: 'Use the layer controls in the top-right corner of the map to overlay additional intelligence: Medical Providers (hospitals, hospices, home health), Mobility Risk Zones, Geographic Density Clusters, Ownership Chains, and Regulatory Records.',
-    tip: 'Tip: Enable the Ownership layer to see which facilities share a corporate parent.',
+    tip: 'Tip: Enable the Ownership layer to see which care homes share a corporate parent.',
   },
   {
     num: 6,
     icon: <BarChart3 size={22} className="text-blue-600" />,
-    title: 'Compare Facilities Side-by-Side',
-    desc: 'Scroll down past the map to the Comparison Grid. This table lets you compare multiple facilities across key metrics — citation count, staffing ratio, monthly fee, value score, and quality score — all in one view.',
-    tip: 'Tip: Sort by Citation Count to rank facilities from worst to best.',
+    title: 'Compare Care Homes Side-by-Side',
+    desc: 'Scroll down past the map to the Comparison Grid. This table lets you compare multiple care homes across key metrics — citation count, staffing ratio, monthly fee, value score, and quality score — all in one view.',
+    tip: 'Tip: Sort by Citation Count to rank care homes from worst to best.',
   },
   {
     num: 7,
     icon: <Bell size={22} className="text-blue-600" />,
     title: 'Set Up Free Safety Alerts',
-    desc: 'Scroll to the Alerts section and enter your email to receive free notifications when facilities you care about receive new safety violations or inspection results.',
+    desc: 'Scroll to the Alerts section and enter your email to receive free notifications when care homes you care about receive new safety violations or inspection results.',
     tip: "Tip: Sign up before you finish your research so you're notified of changes.",
   },
 ];
@@ -82,12 +82,12 @@ const features = [
   {
     icon: <Layers size={20} className="text-purple-600" />,
     label: '5 Data Layers in One Map',
-    desc: 'See facility density, state inspection records, corporate ownership, fall risk zones, and nearby medical providers — all on one map.',
+    desc: 'See care home density, state inspection records, corporate ownership, fall risk zones, and nearby medical providers — all on one map.',
   },
   {
     icon: <Building2 size={20} className="text-orange-600" />,
     label: 'Ownership Transparency',
-    desc: 'See exactly who owns and operates each facility, including parent corporations and multi-facility chains.',
+    desc: 'See exactly who owns and operates each care home, including parent corporations and multi-care-home chains.',
   },
   {
     icon: <Stethoscope size={20} className="text-red-600" />,
@@ -102,7 +102,7 @@ const features = [
   {
     icon: <Bell size={20} className="text-yellow-600" />,
     label: 'Free Safety Alerts',
-    desc: "Get notified when a facility receives new violations or inspection findings — so you're never caught off guard.",
+    desc: "Get notified when a care home receives new violations or inspection findings — so you're never caught off guard.",
   },
 ];
 
@@ -175,7 +175,7 @@ export default function LandingPage() {
           </h1>
           <p className="text-base md:text-lg text-gray-600 max-w-2xl mx-auto mb-8 leading-relaxed">
             LYL Map pulls live data from the federal CMS database to show you the real compliance
-            record of every nursing home, care facility, and assisted living provider in the United
+            record of every nursing home, care home, and assisted living provider in the United
             States — before you or your loved one signs anything.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -205,7 +205,7 @@ export default function LandingPage() {
             What the Map Shows You
           </h2>
           <p className="text-sm text-gray-500 text-center mb-8 max-w-xl mx-auto">
-            Every facility is color-coded and shaped by its compliance status, so you can see
+            Every care home is color-coded and shaped by its compliance status, so you can see
             problems at a glance — no reading required.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -293,7 +293,7 @@ export default function LandingPage() {
       <section className="px-4 md:px-8 py-14 bg-gray-50 border-b border-gray-100">
         <div className="max-w-3xl mx-auto">
           <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2 text-center">
-            How to Read a Facility Profile
+            How to Read a Care Home Profile
           </h2>
           <p className="text-sm text-gray-500 text-center mb-8 max-w-xl mx-auto">
             When you click a pin, a detailed panel opens on the right. Here&apos;s what each section
@@ -304,7 +304,7 @@ export default function LandingPage() {
               {
                 title: 'Status Badge',
                 icon: <AlertTriangle size={15} className="text-yellow-500" />,
-                desc: 'Shows whether the facility has a clean record, active citations, or systemic violations — pulled from CMS penalty and deficiency data.',
+                desc: 'Shows whether the care home has a clean record, active citations, or systemic violations — pulled from CMS penalty and deficiency data.',
               },
               {
                 title: 'Value Score & Quality Score',
@@ -314,7 +314,7 @@ export default function LandingPage() {
               {
                 title: 'Staffing Ratio',
                 icon: <CheckCircle2 size={15} className="text-green-500" />,
-                desc: 'The ratio of staff to residents. A lower number (e.g. 1:4) means more staff per resident. "Not reported" means the facility didn\'t submit staffing data to CMS.',
+                desc: 'The ratio of staff to residents. A lower number (e.g. 1:4) means more staff per resident. "Not reported" means the care home didn\'t submit staffing data to CMS.',
               },
               {
                 title: 'Compliance History',
@@ -329,12 +329,12 @@ export default function LandingPage() {
               {
                 title: 'Financial & Ownership',
                 icon: <Building2 size={15} className="text-orange-500" />,
-                desc: 'Estimated monthly cost, revenue per bed, the legal operator name, and the corporate ownership chain — including how many facilities they control nationwide.',
+                desc: 'Estimated monthly cost, revenue per bed, the legal operator name, and the corporate ownership chain — including how many care homes they control nationwide.',
               },
               {
                 title: 'Action Button',
                 icon: <XCircle size={15} className="text-red-500" />,
-                desc: "Based on the facility's status, this button links to the most relevant advocacy toolkit resource for your situation — documentation tools, forensic audit guides, and more.",
+                desc: "Based on the care home's status, this button links to the most relevant advocacy toolkit resource for your situation — documentation tools, forensic audit guides, and more.",
               },
             ].map((item) => (
               <div
@@ -366,7 +366,7 @@ export default function LandingPage() {
               {
                 label: 'Geographic Density',
                 color: 'text-cyan-600',
-                desc: 'Shows clusters of facilities by region. Numbers inside the circles indicate how many facilities are in that area. Dashed red borders mean the cluster contains critical violations.',
+                desc: 'Shows clusters of care homes by region. Numbers inside the circles indicate how many care homes are in that area. Dashed red borders mean the cluster contains critical violations.',
               },
               {
                 label: 'State Inspection History',
@@ -376,7 +376,7 @@ export default function LandingPage() {
               {
                 label: 'Ownership Chains',
                 color: 'text-orange-600',
-                desc: 'Color-codes facilities by their parent company. Facilities sharing a color are owned by the same company — helping you spot risky patterns across an entire ownership group.',
+                desc: 'Color-codes care homes by their parent company. Care homes sharing a color are owned by the same company — helping you spot risky patterns across an entire ownership group.',
               },
               {
                 label: 'Fall & Mobility Risk Zones',
@@ -402,7 +402,7 @@ export default function LandingPage() {
       <section className="px-4 md:px-8 py-16 bg-gradient-to-br from-[#1D4ED8] to-[#2563EB]">
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Ready to Look Up a Facility?
+            Ready to Look Up a Care Home?
           </h2>
           <p className="text-blue-100 text-sm md:text-base mb-8 leading-relaxed">
             The map is free, no login required. All data comes directly from the federal CMS

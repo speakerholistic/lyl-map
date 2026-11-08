@@ -69,7 +69,7 @@ export default function RemoteMonitorTab() {
       <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-3 flex gap-2">
         <AlertCircle size={14} className="text-yellow-600 mt-0.5 flex-shrink-0" />
         <p className="text-xs text-yellow-800 leading-relaxed">
-          Facilities marked "Remote-Friendly" have documented histories of cooperating with
+          Care homes marked "Remote-Friendly" have documented histories of cooperating with
           independent monitoring directives.
         </p>
       </div>

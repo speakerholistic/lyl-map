@@ -135,7 +135,7 @@ export default function AdminSyncPage() {
           totalSkipped += r.skipped ?? 0;
           setDemoProgress((prev) => [
             ...prev.slice(0, -1),
-            `✓ ${state} — ${r.inserted} facilities`,
+            `✓ ${state} — ${r.inserted} care homes`,
           ]);
         } else {
           lastError = r.error;
@@ -237,7 +237,7 @@ export default function AdminSyncPage() {
               <div>
                 <p className="text-xs text-gray-500">In Database</p>
                 <p className="text-sm font-semibold text-gray-900">
-                  {status.totalInDB?.toLocaleString() ?? '—'} facilities
+                  {status.totalInDB?.toLocaleString() ?? '—'} care homes
                 </p>
               </div>
             </div>
@@ -245,7 +245,7 @@ export default function AdminSyncPage() {
               <Globe size={14} className="text-gray-400" />
               <div>
                 <p className="text-xs text-gray-500">CMS National</p>
-                <p className="text-sm font-semibold text-gray-900">~14,695 facilities</p>
+                <p className="text-sm font-semibold text-gray-900">~14,695 care homes</p>
               </div>
             </div>
           </div>
@@ -257,7 +257,7 @@ export default function AdminSyncPage() {
             <Zap size={12} /> Quick Demo Sync — Recommended for Dev
           </p>
           <p className="text-xs text-amber-700 leading-relaxed mb-3">
-            Loads <strong>real CMS data</strong> for TX, CA, FL, NY, OH (~600–900 facilities) — fast
+            Loads <strong>real CMS data</strong> for TX, CA, FL, NY, OH (~600–900 care homes) — fast
             enough to run in dev without hitting serverless timeouts. Perfect for showing the map
             works with live data. Full national sync is for post-deploy.
           </p>
@@ -309,7 +309,7 @@ export default function AdminSyncPage() {
               onChange={(e) => setStateFilter(e.target.value)}
               className="flex-1 py-2.5 pl-3 pr-7 text-sm text-gray-700 bg-white border border-gray-200 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
             >
-              <option value="">All 50 states — full national sync (~14,695 facilities)</option>
+              <option value="">All 50 states — full national sync (~14,695 care homes)</option>
               {US_STATES.map((s) => (
                 <option key={s} value={s}>
                   {s} — single state sync (fastest)
@@ -362,7 +362,7 @@ export default function AdminSyncPage() {
                   <div className="mt-2 flex flex-col gap-1">
                     {result.scope && <p className="text-xs text-gray-600">Scope: {result.scope}</p>}
                     <p className="text-xs text-green-700 font-medium">
-                      {result.inserted?.toLocaleString()} facilities written to database
+                      {result.inserted?.toLocaleString()} care homes written to database
                     </p>
                     {result.skipped !== undefined && result.skipped > 0 && (
                       <p className="text-xs text-gray-500">
@@ -371,7 +371,7 @@ export default function AdminSyncPage() {
                     )}
                     {result.totalInDB !== undefined && (
                       <p className="text-xs text-gray-700 font-medium mt-1">
-                        DB total: {result.totalInDB.toLocaleString()} facilities
+                        DB total: {result.totalInDB.toLocaleString()} care homes
                       </p>
                     )}
                   </div>

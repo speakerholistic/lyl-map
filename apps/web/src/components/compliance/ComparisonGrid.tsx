@@ -78,9 +78,9 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
   const available = allProperties.filter((p) => !selected.find((s) => s.id === p.id));
 
   const locationLabel = selectedState
-    ? `Facilities in ${selectedState}`
+    ? `Care homes in ${selectedState}`
     : selectedCity
-      ? `Facilities near ${selectedCity}`
+      ? `Care homes near ${selectedCity}`
       : null;
 
   const rows = [
@@ -147,10 +147,6 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
         {/* Header */}
         <div className="mb-8">
           <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
-            <div className="inline-flex items-center gap-1.5 bg-blue-50 text-blue-600 rounded-full px-3 py-1.5 text-sm font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-blue-600" />
-              Direct Comparison Tool
-            </div>
             {locationLabel && (
               <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-3 py-1.5 text-xs font-medium">
                 <MapPin size={11} />
@@ -162,12 +158,12 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
             Are you paying too much for too little?
           </h2>
           <p className="text-gray-500 text-sm mt-2 max-w-xl">
-            Some facilities charge top dollar while having serious safety violations on record.
+            Some care homes charge top dollar while having serious safety violations on record.
             Compare up to 4 care homes side by side to see what you&apos;re actually getting.
           </p>
           {!selectedState && !selectedCity && (
             <p className="text-xs text-amber-700 bg-amber-50 border border-amber-100 rounded-lg px-3 py-2 mt-3 inline-block">
-              💡 Select a state or city above to auto-load local facilities here
+              💡 Select a state or city above to auto-load local care homes here
             </p>
           )}
         </div>
@@ -228,7 +224,7 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
                     <div className="absolute top-full left-0 mt-1 w-64 bg-white border border-gray-200 rounded-xl shadow-lg z-10 overflow-hidden max-h-60 overflow-y-auto">
                       {available.length === 0 ? (
                         <p className="px-3 py-3 text-xs text-gray-400 italic">
-                          No more facilities available. Select a state to load more.
+                          No more care homes available. Select a state to load more.
                         </p>
                       ) : (
                         available.map((prop) => (
@@ -282,8 +278,8 @@ export default function ComparisonGrid({ allProperties, selectedState, selectedC
             <div className="px-6 py-10 text-center">
               <p className="text-sm text-gray-400">
                 {allProperties.length === 0
-                  ? 'Select a state or city above to load facilities you can compare.'
-                  : 'Use "Add Property" to start comparing facilities.'}
+                  ? 'Select a state or city above to load care homes you can compare.'
+                  : 'Use "Add Property" to start comparing care homes.'}
               </p>
             </div>
           )}

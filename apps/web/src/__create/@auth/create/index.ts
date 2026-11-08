@@ -7,14 +7,14 @@
  * residual `import CreateAuth from "@auth/create"` call sites do not fail the
  * module graph. Prefer `@/lib/auth` for new code.
  */
-import { auth as betterAuth } from '@/lib/auth';
+import { getAuth } from '@/lib/auth';
 
 type AuthRequest = {
   headers?: Headers;
 };
 
 async function getSession(request?: AuthRequest) {
-  return betterAuth.api.getSession({
+  return getAuth().api.getSession({
     headers: request?.headers ?? new Headers(),
   });
 }
@@ -25,4 +25,4 @@ export default function CreateAuth() {
   };
 }
 
-export { betterAuth, getSession as auth };
+export { getAuth as betterAuth, getSession as auth };

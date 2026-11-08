@@ -259,9 +259,9 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         "We request formal documentation of this mobility aid safety concern in the care plan and an immediate nursing review of this resident's transfer and ambulation equipment.",
       'State Licensing Agency / Ombudsman':
-        'We are reporting a mobility aid safety deficiency at this facility. Despite family notification, no corrective action has been taken and the resident remains at elevated fall risk. We request an inspection.',
+        'We are reporting a mobility aid safety deficiency at this care home. Despite family notification, no corrective action has been taken and the resident remains at elevated fall risk. We request an inspection.',
       'Medicare Advantage Plan / QIO':
-        'We are requesting prior authorization for replacement mobility equipment for this beneficiary. The current aids are medically inadequate and a physician order for replacement is pending facility cooperation.',
+        'We are requesting prior authorization for replacement mobility equipment for this beneficiary. The current aids are medically inadequate and a physician order for replacement is pending care home cooperation.',
     },
   },
   'MOD-03': {
@@ -297,17 +297,17 @@ export const MODULES: Record<string, ModuleData> = {
       'Formal documentation and intervention framework for pressure injuries (bedsores), including staging, wound protocols, repositioning schedules, and regulatory reporting obligations.',
     scripts: {
       Administrator:
-        "We are formally documenting a pressure injury that developed under your facility's care. This constitutes a potential regulatory deficiency and we are requesting immediate written documentation of wound staging, treatment plan, and prevention protocols.",
+        "We are formally documenting a pressure injury that developed while in your care home. This constitutes a potential regulatory deficiency and we are requesting immediate written documentation of wound staging, treatment plan, and prevention protocols.",
       'Business Office / Billing':
         'We are requesting itemized billing records for all wound care services provided. We will not authorize additional charges until a written wound care plan with measurable healing milestones is provided.',
       'Social Services Director':
         'We request that this pressure injury be formally entered into the care plan and that family communications are updated weekly with wound status reports. Your department is responsible for coordinating this documentation.',
       'Medical Director':
-        'We request a written physician assessment of this pressure injury, including clinical staging, treatment orders, and documentation of whether this wound was present on admission or developed under facility care.',
+        'We request a written physician assessment of this pressure injury, including clinical staging, treatment orders, and documentation of whether this wound was present on admission or developed in the care home.',
       'Director of Nursing':
         'We are formally requesting the complete wound care record for this resident, including turn-and-reposition logs, pressure-relief equipment documentation, and nursing notes from the date of injury discovery to present.',
       'State Licensing Agency / Ombudsman':
-        "We are reporting a Stage [_] pressure injury that developed under facility care for this resident. We request a regulatory inspection and review of this facility's pressure injury prevention and wound care protocols.",
+        "We are reporting a Stage [_] pressure injury that developed in the care home for this resident. We request a regulatory inspection and review of this care home's pressure injury prevention and wound care protocols.",
       'Medicare Advantage Plan / QIO':
         'We are reporting a pressure injury occurrence for review by your quality improvement program. This wound may meet the threshold for a reportable adverse event under CMS hospital-acquired condition guidelines.',
     },
@@ -331,7 +331,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting the current fall risk assessment score, active fall prevention interventions, and documentation of any recent near-misses or environmental hazards identified for this resident.',
       'State Licensing Agency / Ombudsman':
-        'We are documenting a formal fall safety concern for this resident with your office. We request information on how to properly report an unaddressed fall risk and what interventions facilities are required to provide.',
+        'We are documenting a formal fall safety concern for this resident with your office. We request information on how to properly report an unaddressed fall risk and what interventions care homes are required to provide.',
       'Medicare Advantage Plan / QIO':
         "We are requesting a quality of care review for this beneficiary's fall risk management. Current prevention protocols appear inadequate given the resident's documented risk level.",
     },
@@ -355,7 +355,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting the complete medication administration record (MAR) for this resident for the past 30 days, including all nursing notes related to medication administration, errors, and omissions.',
       'State Licensing Agency / Ombudsman':
-        "We are filing a complaint regarding medication errors affecting this resident. The errors have not been properly documented or reported, and we are requesting a licensing inspection of this facility's pharmacy and medication protocols.",
+        "We are filing a complaint regarding medication errors affecting this resident. The errors have not been properly documented or reported, and we are requesting a licensing inspection of this care home's pharmacy and medication protocols.",
       'Medicare Advantage Plan / QIO':
         'We are requesting a medication safety review for this beneficiary under your quality oversight program. Documented medication errors may constitute a reportable adverse event under CMS quality standards.',
     },
@@ -369,7 +369,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Formal legal defense framework against unlawful discharge or involuntary transfer notices — including statutory notice requirements, appeal rights, and 30-day stay procedures.',
     scripts: {
       Administrator:
-        "This discharge notice violates 42 CFR §483.15 and your facility's state licensing obligations. We are formally requesting a 30-day stay of this action and a written care conference within 5 business days.",
+        "This discharge notice violates 42 CFR §483.15 and your care home's state licensing obligations. We are formally requesting a 30-day stay of this action and a written care conference within 5 business days.",
       'Business Office / Billing':
         'The financial basis cited for this discharge does not meet the legal threshold required under state regulations. We are requesting itemized billing documentation and formal review of all charges cited as justification.',
       'Social Services Director':
@@ -379,9 +379,9 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'The nursing care record does not support the clinical rationale cited for this discharge. We are requesting a full nursing assessment review and a 30-day hold on this transfer pending resolution.',
       'State Licensing Agency / Ombudsman':
-        'We are filing a formal objection to an unlawful discharge notice issued by this facility. The notice fails to meet the 30-day advance notice requirement and lacks proper clinical documentation as required under state law.',
+        'We are filing a formal objection to an unlawful discharge notice issued by this care home. The notice fails to meet the 30-day advance notice requirement and lacks proper clinical documentation as required under state law.',
       'Medicare Advantage Plan / QIO':
-        "We are requesting a QIO review of this discharge decision. The facility's notice does not meet CMS discharge planning standards and may constitute a premature discharge of a Medicare-eligible beneficiary.",
+        "We are requesting a QIO review of this discharge decision. The care home's notice does not meet CMS discharge planning standards and may constitute a premature discharge of a Medicare-eligible beneficiary.",
     },
   },
   'MOD-08': {
@@ -403,7 +403,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting 30 days of intake and output logs for this resident. We also request documentation of any nursing assessments triggered by dehydration indicators such as decreased urine output, dry mucous membranes, or altered mentation.',
       'State Licensing Agency / Ombudsman':
-        "We are reporting dehydration-related neglect concerns for this resident. Documentation and daily monitoring requirements appear to have been unmet, and we request a regulatory review of this facility's hydration protocols.",
+        "We are reporting dehydration-related neglect concerns for this resident. Documentation and daily monitoring requirements appear to have been unmet, and we request a regulatory review of this care home's hydration protocols.",
       'Medicare Advantage Plan / QIO':
         'We are requesting a quality review of hydration management for this beneficiary. Dehydration in a long-term care setting may constitute a preventable adverse event under CMS quality indicators.',
     },
@@ -427,9 +427,9 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting complete wound care documentation including wound measurement records, dressing change logs, nursing assessments, and any physician notifications triggered by wound deterioration.',
       'State Licensing Agency / Ombudsman':
-        "We are reporting a wound care management failure for this resident. An infected or non-healing wound is not being properly treated or documented, and we request an inspection of this facility's wound care protocols.",
+        "We are reporting a wound care management failure for this resident. An infected or non-healing wound is not being properly treated or documented, and we request an inspection of this care home's wound care protocols.",
       'Medicare Advantage Plan / QIO':
-        'We are requesting quality oversight review of wound care management for this beneficiary. Wound deterioration under facility care may meet the threshold for a reportable quality event under CMS guidelines.',
+        'We are requesting quality oversight review of wound care management for this beneficiary. Wound deterioration in the care home may meet the threshold for a reportable quality event under CMS guidelines.',
     },
   },
   'MOD-10': {
@@ -451,7 +451,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         "We request nursing documentation to support or dispute care-related charges on this resident's billing statement. Specifically, we need documentation of services billed but disputed as not received.",
       'State Licensing Agency / Ombudsman':
-        'We are reporting unauthorized billing practices affecting this resident. The facility is charging for services not agreed to in writing, and we request a licensing review of their financial disclosure practices.',
+        'We are reporting unauthorized billing practices affecting this resident. The care home is charging for services not agreed to in writing, and we request a licensing review of their financial disclosure practices.',
       'Medicare Advantage Plan / QIO':
         "We are requesting a billing accuracy review for this beneficiary's claims. Charges have been submitted for services that do not align with documented care records or authorized service agreements.",
     },
@@ -489,7 +489,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Compliance documentation for ADA and state accessibility requirements — including ramps, door widths, bathroom grab bars, threshold clearances, and reasonable accommodation obligations.',
     scripts: {
       Administrator:
-        "We are formally documenting ADA accessibility deficiencies in this facility or home environment. These deficiencies create barriers for this resident's safe mobility and may constitute violations of applicable disability access law.",
+        "We are formally documenting ADA accessibility deficiencies in this care home or home environment. These deficiencies create barriers for this resident's safe mobility and may constitute violations of applicable disability access law.",
       'Business Office / Billing':
         'We are requesting disclosure of whether accessibility modifications are included in the contract or available as billed services. Reasonable accommodations required by law should not be charged as optional upgrades.',
       'Social Services Director':
@@ -499,7 +499,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We request a nursing environmental safety assessment documenting specific accessibility barriers affecting this resident and recommendations for modifications needed.',
       'State Licensing Agency / Ombudsman':
-        "We are reporting ADA accessibility deficiencies at this facility that are affecting this resident's safe mobility. We request a compliance inspection of physical plant accessibility.",
+        "We are reporting ADA accessibility deficiencies at this care home that are affecting this resident's safe mobility. We request a compliance inspection of physical plant accessibility.",
       'Medicare Advantage Plan / QIO':
         "We are requesting a review of whether this beneficiary's environment meets the accessibility standards required under their care plan. Accessibility barriers may contribute to preventable falls and hospitalizations.",
     },
@@ -513,7 +513,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Formal incident documentation framework — proper incident report filing, mandatory reporting obligations, family notification timelines, and document preservation requirements.',
     scripts: {
       Administrator:
-        "We are formally requesting a copy of the incident report filed for [incident description]. We also request documentation of your facility's mandatory reporting obligations and confirmation that appropriate agencies have been notified.",
+        "We are formally requesting a copy of the incident report filed for [incident description]. We also request documentation of your care home's mandatory reporting obligations and confirmation that appropriate agencies have been notified.",
       'Business Office / Billing':
         'We are requesting that all financial charges associated with this incident be placed on hold pending resolution of the incident report. We will not authorize new charges until documentation of the incident is complete.',
       'Social Services Director':
@@ -523,7 +523,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting the complete incident report, nursing notes from the time of the incident, and documentation of any immediate nursing interventions and supervisor notifications made.',
       'State Licensing Agency / Ombudsman':
-        'We are filing a formal incident report with your office regarding an event that occurred at this facility. We believe mandatory reporting obligations may not have been met and request an investigation.',
+        'We are filing a formal incident report with your office regarding an event that occurred at this care home. We believe mandatory reporting obligations may not have been met and request an investigation.',
       'Medicare Advantage Plan / QIO':
         'We are requesting a quality of care review of an incident involving this beneficiary. The event may meet the threshold for a reportable adverse event under CMS quality reporting requirements.',
     },
@@ -547,7 +547,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting incontinence care logs, toileting schedule documentation, perineal hygiene protocols, and records of all UTI episodes including urinalysis results and treatment responses for the past 90 days.',
       'State Licensing Agency / Ombudsman':
-        "We are reporting incontinence care neglect and a pattern of preventable UTI infections for this resident. We request a regulatory inspection of this facility's incontinence and infection control practices.",
+        "We are reporting incontinence care neglect and a pattern of preventable UTI infections for this resident. We request a regulatory inspection of this care home's incontinence and infection control practices.",
       'Medicare Advantage Plan / QIO':
         'We are requesting quality review of UTI prevention and incontinence care management for this beneficiary. Recurrent UTIs in long-term care are a CMS quality indicator associated with inadequate care.',
     },
@@ -571,7 +571,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting all restraint consent forms, nursing documentation of restraint application and removal, and records of regular restraint release intervals as required by federal regulations.',
       'State Licensing Agency / Ombudsman':
-        'We are filing a complaint regarding the unauthorized use of physical restraints on this resident. We believe the facility has failed to meet federal consent and alternatives requirements and request an investigation.',
+        'We are filing a complaint regarding the unauthorized use of physical restraints on this resident. We believe the care home has failed to meet federal consent and alternatives requirements and request an investigation.',
       'Medicare Advantage Plan / QIO':
         'We are requesting a quality review of restraint use practices for this beneficiary. Physical restraint use without proper documentation and alternatives may constitute a CMS quality of care deficiency.',
     },
@@ -595,7 +595,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We request nursing documentation to verify that care services billed at additional contract rates were actually provided to this resident and are consistent with the care plan.',
       'State Licensing Agency / Ombudsman':
-        "We are reporting undisclosed and potentially deceptive billing practices embedded in this facility's admission contract. We request a review of their financial disclosure compliance under applicable consumer protection regulations.",
+        "We are reporting undisclosed and potentially deceptive billing practices embedded in this care home's admission contract. We request a review of their financial disclosure compliance under applicable consumer protection regulations.",
       'Medicare Advantage Plan / QIO':
         "We are requesting a billing compliance review for charges billed to this beneficiary's plan. We have identified fees that appear inconsistent with the authorized service agreement and plan coverage terms.",
     },
@@ -643,7 +643,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting the complete incident report, call logs showing staffing at the time of the fall, nursing notes from the 4 hours before and after the fall, and any fall risk reassessment completed after the incident.',
       'State Licensing Agency / Ombudsman':
-        'We are filing a formal fall incident report with your office. The facility has not provided adequate documentation of this fall or conducted a thorough investigation. We request a regulatory inspection.',
+        'We are filing a formal fall incident report with your office. The care home has not provided adequate documentation of this fall or conducted a thorough investigation. We request a regulatory inspection.',
       'Medicare Advantage Plan / QIO':
         'We are requesting a quality of care review of this fall event for this beneficiary. Falls resulting in injury in long-term care settings are a CMS quality indicator requiring formal investigation and documentation.',
     },
@@ -669,7 +669,7 @@ export const MODULES: Record<string, ModuleData> = {
       'State Licensing Agency / Ombudsman':
         "We are reporting a denial of rehabilitation services for this resident that may not be clinically justified. We request guidance on this resident's rights to therapy access and how to formally appeal a therapy discontinuation.",
       'Medicare Advantage Plan / QIO':
-        "We are requesting a coverage determination review for rehabilitation services for this beneficiary. The facility has discontinued therapy in a manner that may not meet Medicare's medical necessity standards.",
+        "We are requesting a coverage determination review for rehabilitation services for this beneficiary. The care home has discontinued therapy in a manner that may not meet Medicare's medical necessity standards.",
     },
   },
   'MOD-20': {
@@ -678,7 +678,7 @@ export const MODULES: Record<string, ModuleData> = {
     track: 'G',
     urgency: 'high',
     description:
-      'Pre-elopement documentation, wandering risk assessment demands, and facility security protocol review for residents at risk of leaving unsupervised — including door alarm, wander guard, and supervision requirements.',
+      'Pre-elopement documentation, wandering risk assessment demands, and care home security protocol review for residents at risk of leaving unsupervised — including door alarm, wander guard, and supervision requirements.',
     scripts: {
       Administrator:
         'We are formally documenting elopement risk for this resident and requesting written confirmation of the current wandering prevention protocols in place, including door alarm systems, wander guard devices, and supervision schedules.',
@@ -691,7 +691,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting documentation of the elopement risk assessment score for this resident, current prevention protocols in place, and any incident reports related to attempted or actual elopements.',
       'State Licensing Agency / Ombudsman':
-        'We are documenting an unaddressed elopement risk for this resident with your office. We request information on the safety and security standards facilities are required to maintain for at-risk residents.',
+        'We are documenting an unaddressed elopement risk for this resident with your office. We request information on the safety and security standards care homes are required to maintain for at-risk residents.',
       'Medicare Advantage Plan / QIO':
         'We are requesting a quality of care review of elopement risk management for this beneficiary. Inadequate wandering prevention for a cognitively impaired resident may constitute a preventable safety event.',
     },
@@ -702,7 +702,7 @@ export const MODULES: Record<string, ModuleData> = {
     track: 'E',
     urgency: 'high',
     description:
-      'Formal reporting and documentation framework for suspected financial exploitation — including asset transfers under pressure, unauthorized account access, and coercive financial practices by facility staff or administrators.',
+      'Formal reporting and documentation framework for suspected financial exploitation — including asset transfers under pressure, unauthorized account access, and coercive financial practices by care home staff or administrators.',
     scripts: {
       Administrator:
         'We are formally reporting suspected financial exploitation of this resident. We request an immediate review of all financial transactions made by or on behalf of this resident since admission, and we are preserving all related records.',
@@ -715,7 +715,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         "We request nursing documentation of this resident's cognitive status, any observed unusual financial interactions with staff, and any resident requests or complaints related to their finances.",
       'State Licensing Agency / Ombudsman':
-        'We are filing a formal financial exploitation complaint involving this resident. We believe facility staff or administration may have facilitated or enabled unauthorized financial transactions. We request an immediate investigation.',
+        'We are filing a formal financial exploitation complaint involving this resident. We believe care home staff or administration may have facilitated or enabled unauthorized financial transactions. We request an immediate investigation.',
       'Medicare Advantage Plan / QIO':
         'We are notifying your program of potential financial exploitation of this beneficiary. While this is primarily a state adult protective services matter, we request coordination of any quality of care concerns related to the exploitation.',
     },
@@ -739,7 +739,7 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We request nursing documentation of any staff conduct related to this resident rights violation, including any complaints or observations made by nursing staff.',
       'State Licensing Agency / Ombudsman':
-        "We are filing a formal resident rights violation complaint with your office. We believe the facility has violated this resident's federally guaranteed rights and request a licensing investigation.",
+        "We are filing a formal resident rights violation complaint with your office. We believe the care home has violated this resident's federally guaranteed rights and request a licensing investigation.",
       'Medicare Advantage Plan / QIO':
         'We are reporting a resident rights concern for this beneficiary that may affect their quality of care under your plan. We request guidance on how quality of care concerns intersecting with rights violations should be reported.',
     },
@@ -763,9 +763,9 @@ export const MODULES: Record<string, ModuleData> = {
       'Director of Nursing':
         'We are requesting a compiled record of all incident reports, nursing notes, and care plan entries related to each recurring incident in this pattern. We need documentation showing whether corrective actions were taken after each event.',
       'State Licensing Agency / Ombudsman':
-        'We are filing a pattern-of-care complaint with your office. Multiple documented incidents of the same type indicate a systemic failure at this facility that exceeds the threshold for a single incident complaint.',
+        'We are filing a pattern-of-care complaint with your office. Multiple documented incidents of the same type indicate a systemic failure at this care home that exceeds the threshold for a single incident complaint.',
       'Medicare Advantage Plan / QIO':
-        'We are requesting an escalated quality of care review for this beneficiary based on a pattern of recurring incidents. Repeated events of the same type may indicate a systemic quality failure at this facility.',
+        'We are requesting an escalated quality of care review for this beneficiary based on a pattern of recurring incidents. Repeated events of the same type may indicate a systemic quality failure at this care home.',
     },
   },
   'MOD-24': {
@@ -774,22 +774,22 @@ export const MODULES: Record<string, ModuleData> = {
     track: 'A',
     urgency: 'high',
     description:
-      'Compliant discharge and transfer management framework — ensuring proper planning, notification timelines, receiving facility standards review, and continuity of care documentation.',
+      'Compliant discharge and transfer management framework — ensuring proper planning, notification timelines, receiving care home standards review, and continuity of care documentation.',
     scripts: {
       Administrator:
-        'We are formally requesting a compliant discharge transition plan for this resident. The plan must meet all federal requirements under 42 CFR §483.21, including written notice, care conference, and receiving facility documentation.',
+        'We are formally requesting a compliant discharge transition plan for this resident. The plan must meet all federal requirements under 42 CFR §483.21, including written notice, care conference, and receiving care home documentation.',
       'Business Office / Billing':
         'We are requesting a full financial accounting of costs associated with this discharge transition, including any fees for transfer coordination, and written confirmation of how the final billing period will be calculated.',
       'Social Services Director':
-        "We request a formal discharge planning conference with family participation, a written discharge summary, and documentation of the receiving facility's compliance record and bed availability.",
+        "We request a formal discharge planning conference with family participation, a written discharge summary, and documentation of the receiving care home's compliance record and bed availability.",
       'Medical Director':
-        "We request written physician authorization for this transfer, including documentation that the receiving facility can meet this resident's current medical needs and that continuity of care has been arranged.",
+        "We request written physician authorization for this transfer, including documentation that the receiving care home can meet this resident's current medical needs and that continuity of care has been arranged.",
       'Director of Nursing':
-        'We request a complete nursing discharge summary, medication reconciliation document, and wound care or treatment continuity instructions to be provided to the receiving facility before transfer.',
+        'We request a complete nursing discharge summary, medication reconciliation document, and wound care or treatment continuity instructions to be provided to the receiving care home before transfer.',
       'State Licensing Agency / Ombudsman':
         'We are requesting guidance on compliant discharge and transfer standards from your office. We have concerns that the discharge transition plan being offered does not meet federal or state requirements.',
       'Medicare Advantage Plan / QIO':
-        "We are requesting a discharge planning compliance review for this beneficiary's transfer. We need confirmation that the receiving facility meets quality standards and that continuity of care documentation will be transferred.",
+        "We are requesting a discharge planning compliance review for this beneficiary's transfer. We need confirmation that the receiving care home meets quality standards and that continuity of care documentation will be transferred.",
     },
   },
 };

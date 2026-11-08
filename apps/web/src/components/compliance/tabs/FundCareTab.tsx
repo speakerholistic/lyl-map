@@ -2,8 +2,7 @@
 
 import { useState } from 'react';
 import { DollarSign, AlertTriangle, ArrowRight } from 'lucide-react';
-
-const SHOP_URL = process.env.NEXT_PUBLIC_SHOP_URL ?? '#';
+import { SHOP_URL } from '@/lib/kajabi';
 
 export default function FundCareTab() {
   const [liquidSavings, setLiquidSavings] = useState('');
@@ -20,7 +19,7 @@ export default function FundCareTab() {
     const months = Math.floor(savings / fee);
     setResult({
       months,
-      message: `At this monthly rate, your savings would run out in approximately ${months} months (${Math.floor(months / 12)} years). Once your money is gone, the facility may push you toward Medicaid, a lower level of care, or — in some cases — pressure you to leave. Knowing this timeline now gives you time to plan and protect what you have.`,
+      message: `At this monthly rate, your savings would run out in approximately ${months} months (${Math.floor(months / 12)} years). Once your money is gone, the care home may push you toward Medicaid, a lower level of care, or — in some cases — pressure you to leave. Knowing this timeline now gives you time to plan and protect what you have.`,
     });
   };
 

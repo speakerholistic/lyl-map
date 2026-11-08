@@ -1,11 +1,11 @@
 'use client';
 
 import { Bell, ArrowRight } from 'lucide-react';
+import { KAJABI_URLS } from '@/lib/kajabi';
 
 export default function EmailOptIn() {
-  // Replace this URL with your actual Kajabi landing page URL
-  const kajabiUrl =
-    process.env.NEXT_PUBLIC_KAJABI_ALERTS_URL || 'https://your-kajabi-site.com/compliance-alerts';
+  // NEXT_PUBLIC_KAJABI_ALERTS_URL (falls back to the Kajabi library, then the LYL site)
+  const kajabiUrl = KAJABI_URLS.alerts;
 
   return (
     <section

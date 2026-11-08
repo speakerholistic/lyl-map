@@ -106,6 +106,9 @@ function SignUpForm() {
         >
           Already have an account? Sign in
         </a>
+        <a href="/" className="text-center text-[13px] text-gray-500 hover:underline">
+          ← Back to home
+        </a>
       </form>
     </main>
   );

@@ -17,9 +17,18 @@ import type {
   DensityCluster,
   OwnershipChain,
 } from '@/data/layerTypes';
+import type { StateBounds } from '@/data/stateBounds';
 
 /** Stable type for the Google Maps instance without relying on the global google namespace */
 type GMap = NonNullable<ReturnType<typeof useMap>>;
+
+/** Where the map should move: fit `bounds` when given, otherwise center + zoom. */
+export interface FocusTarget {
+  lat: number;
+  lng: number;
+  zoom: number;
+  bounds?: StateBounds;
+}
 
 interface Props {
   properties: Property[];
@@ -29,7 +38,7 @@ interface Props {
   layerData: LayerData;
   onReset: () => void;
   /** When set, the map smoothly pans+zooms to this location */
-  focusTarget?: { lat: number; lng: number; zoom: number } | null;
+  focusTarget?: FocusTarget | null;
 }
 
 // ─── SVG → data URI helper ────────────────────────────────────────────────────
@@ -329,7 +338,7 @@ function DensityMarker({ cluster }: { cluster: DensityCluster }) {
           >
             <p style={{ fontWeight: 600, margin: '0 0 3px', color: '#111827' }}>Density Cluster</p>
             <p style={{ margin: '0 0 3px', color: '#6B7280' }}>
-              {cluster.count} facilities in region
+              {cluster.count} care homes in region
             </p>
             <p style={{ margin: 0, color: hasCritical ? '#DC2626' : '#6B7280' }}>
               {cluster.criticalCount} critical violations
@@ -352,7 +361,7 @@ function MapController({
   selectedId: string | null;
   properties: Property[];
   onMapReady: (map: GMap) => void;
-  focusTarget?: { lat: number; lng: number; zoom: number } | null;
+  focusTarget?: FocusTarget | null;
 }) {
   // bare useMap() auto-resolves to the enclosing GoogleMap instance
   const map = useMap();
@@ -379,6 +388,18 @@ function MapController({
   // Fly to focusTarget whenever it changes (state or city selection)
   useEffect(() => {
     if (!map || !focusTarget) return;
+    const b = focusTarget.bounds;
+    // Alaska / Hawaii sit outside the lower-48 restriction — lift it for them.
+    const outsideConus =
+      !!b &&
+      (b.south < CONUS_RESTRICTION.latLngBounds.south ||
+        b.north > CONUS_RESTRICTION.latLngBounds.north ||
+        b.west < CONUS_RESTRICTION.latLngBounds.west);
+    map.setOptions({ restriction: outsideConus ? null : CONUS_RESTRICTION });
+    if (b) {
+      map.fitBounds(b, 24);
+      return;
+    }
     map.panTo({ lat: focusTarget.lat, lng: focusTarget.lng });
     // slight delay so panTo starts before zoom kicks in — feels smoother
     const t = setTimeout(() => map.setZoom(focusTarget.zoom), 120);
@@ -432,7 +453,7 @@ function StatInset({
         {label}
       </span>
       {properties.length === 0 ? (
-        <span style={{ fontSize: 10, color: '#94a3b8' }}>No facilities</span>
+        <span style={{ fontSize: 10, color: '#94a3b8' }}>No care homes</span>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           {clean > 0 && (
@@ -517,6 +538,7 @@ export default function ComplianceMapCanvas({
   const goTo = useCallback((lat: number, lng: number, zoom: number) => {
     const m = mapRef.current;
     if (!m) return;
+    m.setOptions({ restriction: CONUS_RESTRICTION });
     m.setCenter({ lat, lng });
     m.setZoom(zoom);
   }, []);
@@ -659,7 +681,7 @@ export default function ComplianceMapCanvas({
 
             <button
               onClick={handleZoomOut}
-              title="Zoom out to see all facilities"
+              title="Zoom out to see all care homes"
               style={{
                 ...btnBase,
                 background: '#EFF6FF',
@@ -674,7 +696,7 @@ export default function ComplianceMapCanvas({
             {selectedId && (
               <button
                 onClick={handleReset}
-                title="Deselect facility and reset view"
+                title="Deselect care home and reset view"
                 style={{
                   ...btnBase,
                   background: '#FFF7ED',

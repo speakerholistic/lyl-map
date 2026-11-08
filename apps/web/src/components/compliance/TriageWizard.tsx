@@ -4,8 +4,6 @@ import { useState } from 'react';
 import {
   ArrowRight,
   ArrowLeft,
-  CheckSquare,
-  Square,
   RotateCcw,
   ExternalLink,
   ChevronDown,
@@ -15,20 +13,18 @@ import {
   MapPin,
 } from 'lucide-react';
 import {
-  Q1_TRACKS,
   Q2_OPTIONS,
   MODULES,
-  Q3_ADDRESSEES,
   type TabDestination,
   type ModuleData,
   type Q3Addressee,
 } from '@/data/triageData';
+import { matchTrack, matchModuleIds, matchAddressee } from '@/data/triageMatching';
+import { SHOP_URL } from '@/lib/kajabi';
 
-const SHOP_URL = process.env.NEXT_PUBLIC_SHOP_URL ?? '#';
-
-// Plain-language display names for the Q3 addressee dropdown
+// Plain-language display names for the matched Q3 addressee
 const ADDRESSEE_LABELS: Record<string, string> = {
-  Administrator: 'Facility Administrator',
+  Administrator: 'Care Home Administrator',
   'Business Office / Billing': 'Billing Department',
   'Social Services Director': 'Social Worker',
   'Medical Director': 'Medical Director',
@@ -52,11 +48,12 @@ const URGENCY_LABELS = {
 interface ModuleCardProps {
   mod: ModuleData;
   addressee: Q3Addressee;
+  addresseeText: string;
   expanded: boolean;
   onToggle: () => void;
 }
 
-function ModuleCard({ mod, addressee, expanded, onToggle }: ModuleCardProps) {
+function ModuleCard({ mod, addressee, addresseeText, expanded, onToggle }: ModuleCardProps) {
   const script = mod.scripts[addressee];
 
   return (
@@ -93,7 +90,7 @@ function ModuleCard({ mod, addressee, expanded, onToggle }: ModuleCardProps) {
             <div className="flex items-center gap-1.5 mb-2">
               <Info size={12} className="text-blue-500" />
               <p className="text-[10px] font-semibold text-blue-600 uppercase tracking-wide">
-                Script for {ADDRESSEE_LABELS[addressee] ?? addressee}
+                Script for {addresseeText.trim() || (ADDRESSEE_LABELS[addressee] ?? addressee)}
               </p>
             </div>
             <p className="text-xs text-gray-700 leading-relaxed">{script}</p>
@@ -121,9 +118,9 @@ function PropertyProfileInstruction({ moduleCount }: { moduleCount: number }) {
     <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 flex items-start gap-2.5">
       <MapPin size={15} className="text-amber-600 flex-shrink-0 mt-0.5" />
       <div>
-        <p className="text-xs font-semibold text-amber-800 mb-1">Select a facility on the map</p>
+        <p className="text-xs font-semibold text-amber-800 mb-1">Select a care home on the map</p>
         <p className="text-xs text-amber-700 leading-relaxed">
-          Click any facility pin to open its compliance profile.{' '}
+          Click any care home pin to open its compliance profile.{' '}
           {moduleCount > 1 ? `Your ${moduleCount} matched modules` : 'Your matched module'} will
           appear with full scripts and download links.
         </p>
@@ -136,48 +133,52 @@ type Step = 'q1' | 'q2' | 'result';
 
 interface TriageWizardProps {
   onTabActivate: (tab: TabDestination) => void;
+  /** State picked on the map (e.g. "TN") — kept and shown through every step. */
+  selectedState?: string;
 }
 
-export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
+// Shows which state the results apply to, so the map selection carries through the form.
+function StateChip({ state }: { state?: string }) {
+  if (!state) return null;
+  return (
+    <span className="inline-flex items-center gap-1 self-start bg-blue-50 border border-blue-100 text-blue-700 rounded-full px-2.5 py-1 text-[10px] font-semibold">
+      <MapPin size={10} />
+      State: {state}
+    </span>
+  );
+}
+
+const TEXTAREA_CLASS =
+  'w-full px-3 py-2.5 text-xs text-gray-900 bg-white border border-gray-200 rounded-xl resize-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600';
+
+export default function TriageWizard({ onTabActivate, selectedState }: TriageWizardProps) {
   const [step, setStep] = useState<Step>('q1');
-  const [selectedTrackId, setSelectedTrackId] = useState<string | null>(null);
-  const [selectedOptions, setSelectedOptions] = useState<Set<string>>(new Set());
-  const [selectedAddressee, setSelectedAddressee] = useState<Q3Addressee>(Q3_ADDRESSEES[0]);
+  const [q1Text, setQ1Text] = useState('');
+  const [q2Text, setQ2Text] = useState('');
+  const [addresseeText, setAddresseeText] = useState('');
   const [expandedModule, setExpandedModule] = useState<string | null>(null);
 
-  const track = Q1_TRACKS.find((t) => t.id === selectedTrackId);
-  const q2Options = selectedTrackId ? (Q2_OPTIONS[selectedTrackId] ?? []) : [];
+  const track = q1Text.trim() ? matchTrack(q1Text) : undefined;
+  const q2Examples = track ? (Q2_OPTIONS[track.id] ?? []) : [];
 
-  const matchedModuleIds = Array.from(selectedOptions)
-    .map((optId) => q2Options.find((o) => o.id === optId)?.moduleId)
-    .filter((id): id is string => !!id);
-
+  const matchedModuleIds = track ? matchModuleIds(q2Text, q1Text, track.id) : [];
   const matchedModules = matchedModuleIds.map((id) => MODULES[id]).filter(Boolean);
+  const selectedAddressee = matchAddressee(addresseeText);
 
   const reset = () => {
     setStep('q1');
-    setSelectedTrackId(null);
-    setSelectedOptions(new Set());
+    setQ1Text('');
+    setQ2Text('');
     setExpandedModule(null);
   };
 
-  const handleQ1Select = (trackId: string) => {
-    setSelectedTrackId(trackId);
-    setSelectedOptions(new Set());
+  const handleQ1Continue = () => {
+    if (!q1Text.trim()) return;
     setStep('q2');
   };
 
-  const handleQ2Toggle = (optId: string) => {
-    setSelectedOptions((prev) => {
-      const next = new Set(prev);
-      if (next.has(optId)) next.delete(optId);
-      else next.add(optId);
-      return next;
-    });
-  };
-
   const handleQ2Continue = () => {
-    if (selectedOptions.size === 0 || !track) return;
+    if (!q2Text.trim() || !track) return;
     onTabActivate(track.opensTab);
     // Auto-expand the first module
     if (matchedModuleIds[0]) setExpandedModule(matchedModuleIds[0]);
@@ -189,26 +190,33 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
     return (
       <div className="flex flex-col gap-2.5">
         <div className="mb-1">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1">
+          <StateChip state={selectedState} />
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1 mt-1">
             Step 1 of 3
           </p>
-          <h3 className="text-sm font-bold text-gray-900">What's happening right now?</h3>
-          <p className="text-xs text-gray-500 mt-0.5">Choose the situation that fits best.</p>
+          <label htmlFor="triage-q1" className="block text-sm font-bold text-gray-900">
+            What's happening right now?
+          </label>
+          <p className="text-xs text-gray-500 mt-0.5">Describe the situation in your own words.</p>
         </div>
 
-        {Q1_TRACKS.map((t) => (
-          <button
-            key={t.id}
-            onClick={() => handleQ1Select(t.id)}
-            className="flex items-center gap-3 w-full text-left px-3 py-3 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
-          >
-            <span className="w-5 h-5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold flex items-center justify-center flex-shrink-0">
-              {t.id}
-            </span>
-            <span className="text-xs text-gray-700 leading-snug flex-1">{t.situation}</span>
-            <ArrowRight size={13} className="text-gray-400 flex-shrink-0" />
-          </button>
-        ))}
+        <textarea
+          id="triage-q1"
+          value={q1Text}
+          onChange={(e) => setQ1Text(e.target.value)}
+          rows={4}
+          placeholder="e.g. We just got a discharge notice and have 30 days to leave"
+          className={TEXTAREA_CLASS}
+        />
+
+        <button
+          onClick={handleQ1Continue}
+          disabled={!q1Text.trim()}
+          className="w-full bg-[#2563EB] text-white text-xs font-semibold py-3 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-1"
+        >
+          Continue
+          <ArrowRight size={13} />
+        </button>
       </div>
     );
   }
@@ -219,60 +227,45 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
       <div className="flex flex-col gap-2.5">
         <div className="flex items-start gap-2 mb-1">
           <button
-            onClick={reset}
+            onClick={() => setStep('q1')}
             className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-400 flex-shrink-0 mt-0.5"
             aria-label="Back to step 1"
           >
             <ArrowLeft size={13} />
           </button>
           <div>
-            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">
+            <StateChip state={selectedState} />
+            <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5 mt-1">
               Step 2 of 3
             </p>
-            <h3 className="text-sm font-bold text-gray-900">Which of these apply?</h3>
-            <p className="text-xs text-gray-500 mt-0.5">Select all that fit your situation.</p>
+            <label htmlFor="triage-q2" className="block text-sm font-bold text-gray-900">
+              Which of these apply?
+            </label>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Tell us the specifics — include everything that fits your situation.
+            </p>
           </div>
         </div>
 
         <div className="bg-blue-50 border border-blue-100 rounded-lg px-3 py-2">
-          <p className="text-xs text-blue-700 font-medium">
-            Track {selectedTrackId}: {track?.situation}
-          </p>
+          <p className="text-xs text-blue-700 font-medium whitespace-pre-wrap">{q1Text.trim()}</p>
         </div>
 
-        {q2Options.map((opt) => {
-          const isChecked = selectedOptions.has(opt.id);
-          return (
-            <button
-              key={opt.id}
-              onClick={() => handleQ2Toggle(opt.id)}
-              role="checkbox"
-              aria-checked={isChecked}
-              className={`flex items-start gap-2.5 w-full text-left p-3 rounded-xl border transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600 ${
-                isChecked
-                  ? 'bg-blue-50 border-blue-300'
-                  : 'bg-white border-gray-200 hover:border-gray-300 hover:bg-gray-50'
-              }`}
-            >
-              {isChecked ? (
-                <CheckSquare size={15} className="text-blue-600 mt-0.5 flex-shrink-0" />
-              ) : (
-                <Square size={15} className="text-gray-400 mt-0.5 flex-shrink-0" />
-              )}
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-gray-700 leading-snug">{opt.label}</p>
-                <p className="text-[10px] text-gray-400 mt-0.5 font-mono">{opt.moduleId}</p>
-              </div>
-            </button>
-          );
-        })}
+        <textarea
+          id="triage-q2"
+          value={q2Text}
+          onChange={(e) => setQ2Text(e.target.value)}
+          rows={4}
+          placeholder={q2Examples[0] ? `e.g. ${q2Examples[0].label}` : 'Describe the details…'}
+          className={TEXTAREA_CLASS}
+        />
 
         <button
           onClick={handleQ2Continue}
-          disabled={selectedOptions.size === 0}
+          disabled={!q2Text.trim()}
           className="w-full bg-[#2563EB] text-white text-xs font-semibold py-3 rounded-xl hover:bg-blue-700 transition-colors disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 mt-1"
         >
-          Find My Module{selectedOptions.size > 1 ? 's' : ''}
+          Find My Module{matchedModuleIds.length > 1 ? 's' : ''}
           <ArrowRight size={13} />
         </button>
       </div>
@@ -294,7 +287,8 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
           <ArrowLeft size={13} />
         </button>
         <div>
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">
+          <StateChip state={selectedState} />
+          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5 mt-1">
             Step 3 of 3
           </p>
           <h3 className="text-sm font-bold text-gray-900">
@@ -303,22 +297,22 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
         </div>
       </div>
 
-      {/* Addressee selector (global Q3 — applies to all modules) */}
+      {/* Addressee (global Q3 — applies to all modules) */}
       <div className="bg-white border border-gray-200 rounded-xl p-3">
-        <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5">
+        <label
+          htmlFor="triage-q3"
+          className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-1.5"
+        >
           Who are you addressing this to?
         </label>
-        <select
-          value={selectedAddressee}
-          onChange={(e) => setSelectedAddressee(e.target.value as Q3Addressee)}
-          className="w-full px-3 py-2 text-xs text-gray-900 bg-gray-50 border border-gray-200 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
-        >
-          {Q3_ADDRESSEES.map((a) => (
-            <option key={a} value={a}>
-              {ADDRESSEE_LABELS[a] ?? a}
-            </option>
-          ))}
-        </select>
+        <textarea
+          id="triage-q3"
+          value={addresseeText}
+          onChange={(e) => setAddresseeText(e.target.value)}
+          rows={2}
+          placeholder="e.g. The care home administrator, the head nurse, or the state inspector"
+          className="w-full px-3 py-2 text-xs text-gray-900 bg-gray-50 border border-gray-200 rounded-lg resize-y focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-600"
+        />
       </div>
 
       {/* Property profile instruction */}
@@ -330,6 +324,7 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
           key={mod.id}
           mod={mod}
           addressee={selectedAddressee}
+          addresseeText={addresseeText}
           expanded={expandedModule === mod.id}
           onToggle={() => setExpandedModule(expandedModule === mod.id ? null : mod.id)}
         />
@@ -339,7 +334,7 @@ export default function TriageWizard({ onTabActivate }: TriageWizardProps) {
         <div className="flex items-start gap-2 p-3 bg-yellow-50 border border-yellow-200 rounded-xl">
           <AlertTriangle size={14} className="text-yellow-600 flex-shrink-0 mt-0.5" />
           <p className="text-xs text-yellow-800">
-            No modules matched. Please go back and select at least one option.
+            No modules matched. Please go back and describe your situation in a bit more detail.
           </p>
         </div>
       )}

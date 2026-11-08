@@ -68,7 +68,7 @@ export default function AdminGuidePage() {
           </div>
           <div className="p-5 flex flex-col gap-4">
             <p className="text-sm text-gray-700 leading-relaxed">
-              All facility data comes from the official CMS Provider Data Catalog at{' '}
+              All care home data comes from the official CMS Provider Data Catalog at{' '}
               <code className="bg-gray-100 rounded px-1 text-xs">
                 data.cms.gov/provider-data/dataset/4pq5-n9py
               </code>
@@ -88,7 +88,7 @@ export default function AdminGuidePage() {
                 </div>
                 <p className="text-xs text-gray-700 leading-relaxed mb-2">
                   Click <strong>"Load Demo Data (5 States)"</strong> on the Sync Panel. Pulls real
-                  CMS data for TX, CA, FL, NY, OH (~600–900 facilities). Each state is synced as its
+                  CMS data for TX, CA, FL, NY, OH (~600–900 care homes). Each state is synced as its
                   own request, so no serverless timeout. Takes ~25 seconds total. Perfect for
                   confirming the map and CTAs work.
                 </p>
@@ -125,7 +125,7 @@ export default function AdminGuidePage() {
                   </span>
                 </div>
                 <p className="text-xs text-gray-700 leading-relaxed mb-2">
-                  Pulls all ~14,695 facilities across 50 states. Works on production (Netlify/Vercel
+                  Pulls all ~14,695 care homes across 50 states. Works on production (Netlify/Vercel
                   functions have a 60s timeout or use background functions). May fail in the
                   Anything dev preview (30s cap). Run once after deploy, then monthly to stay
                   current — CMS updates data every 4–6 weeks.
@@ -281,7 +281,7 @@ export default function AdminGuidePage() {
                 },
                 {
                   label: 'Test one property panel CTA click',
-                  detail: 'Click a red facility → verify Module 24 Kajabi link opens',
+                  detail: 'Click a red care home → verify Module 24 Kajabi link opens',
                   critical: true,
                 },
                 {
@@ -351,7 +351,7 @@ export default function AdminGuidePage() {
               {
                 title: 'Emergency Exit zip search (/api/cms/search)',
                 detail:
-                  "The Emergency Exit tab POSTs to /api/cms/search which queries your local DB for critical properties near a zip. This is now wired to your properties table. If zip returns no results it's because that zip range has no critical facilities in the synced data yet — run more state syncs.",
+                  "The Emergency Exit tab POSTs to /api/cms/search which queries your local DB for critical properties near a zip. This is now wired to your properties table. If zip returns no results it's because that zip range has no critical care homes in the synced data yet — run more state syncs.",
                 status: 'fixed',
               },
               {

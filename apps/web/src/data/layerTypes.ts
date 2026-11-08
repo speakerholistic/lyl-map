@@ -23,7 +23,7 @@ export const LAYER_META: LayerMeta[] = [
     color: 'text-cyan-600',
     accentHex: '#0891B2',
     icon: 'Map',
-    description: 'Regional facility concentration and population density plots',
+    description: 'Regional care home concentration and population density plots',
   },
   {
     id: 'regulatory',
@@ -43,7 +43,7 @@ export const LAYER_META: LayerMeta[] = [
     accentHex: '#7C3AED',
     icon: 'Landmark',
     description:
-      'Corporate parent entity trails connecting facilities under the same ownership chain',
+      'Corporate parent entity trails connecting care homes under the same ownership chain',
   },
   {
     id: 'mobility',
