@@ -38,8 +38,13 @@ function LogoutHandler() {
   }, [callbackUrl]);
 
   return (
-    <main className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-[16px]">
-      <div className="flex flex-col items-center gap-[12px] text-[14px] text-gray-600">
+    <main id="main-content" tabIndex={-1} className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-[16px]">
+      <div
+        className="flex flex-col items-center gap-[12px] text-[14px] text-gray-600"
+        role="status"
+        aria-live="polite"
+      >
+        <h1 className="sr-only">Sign out</h1>
         {error ? <span className="text-red-600">{error}</span> : <span>Signing out…</span>}
       </div>
     </main>

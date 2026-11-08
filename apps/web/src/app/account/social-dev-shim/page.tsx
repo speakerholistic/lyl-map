@@ -94,7 +94,7 @@ function SocialDevShim() {
   };
 
   return (
-    <main className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-[16px]">
+    <main id="main-content" tabIndex={-1} className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-[16px]">
       <div className="flex w-full max-w-[400px] flex-col gap-[16px] rounded-[12px] bg-white p-[24px] shadow">
         <div className="rounded-[8px] border border-amber-400 bg-amber-50 p-[10px] text-[13px] text-amber-800">
           <strong>Development mode</strong> — this is a simulated {label} sign-in. In production,
@@ -129,7 +129,7 @@ function SocialDevShim() {
           </label>
 
           <label className="flex flex-col gap-[4px] text-[14px]">
-            Display name <span className="text-gray-400">(optional)</span>
+            Display name <span className="text-gray-600">(optional)</span>
             <input
               type="text"
               value={name}
@@ -150,7 +150,7 @@ function SocialDevShim() {
           >
             {loading ? 'Signing in…' : `Continue as ${label} user`}
           </button>
-          <a href="/" className="text-center text-[13px] text-gray-500 hover:underline">
+          <a href="/" className="text-center text-[13px] text-gray-600 hover:underline">
             ← Back to home
           </a>
         </form>

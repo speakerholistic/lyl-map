@@ -17,7 +17,7 @@ const sections: Section[] = [
 
 export default function AdminGuidePage() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <main id="main-content" tabIndex={-1} className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
@@ -28,7 +28,7 @@ export default function AdminGuidePage() {
             <h1 className="text-base font-semibold text-gray-900">
               CareGuard Admin Operations Guide
             </h1>
-            <p className="text-xs text-gray-500">
+            <p className="text-xs text-gray-600">
               Last updated: July 2026 — keep this tab bookmarked
             </p>
           </div>
@@ -40,7 +40,7 @@ export default function AdminGuidePage() {
           >
             Go to Sync Panel <ChevronRight size={12} />
           </a>
-          <a href="/" className="text-xs text-gray-500 hover:text-gray-700">
+          <a href="/" className="text-xs text-gray-600 hover:text-gray-900">
             ← Back to Map
           </a>
         </div>
@@ -92,7 +92,7 @@ export default function AdminGuidePage() {
                   own request, so no serverless timeout. Takes ~25 seconds total. Perfect for
                   confirming the map and CTAs work.
                 </p>
-                <p className="text-xs text-gray-500">
+                <p className="text-xs text-gray-600">
                   →{' '}
                   <a href="/admin/sync" className="text-blue-600 hover:underline">
                     admin/sync
@@ -131,8 +131,8 @@ export default function AdminGuidePage() {
                   current — CMS updates data every 4–6 weeks.
                 </p>
                 <div className="mt-2 border-t border-gray-200 pt-2">
-                  <p className="text-xs text-gray-500 font-medium">CMS Update Schedule:</p>
-                  <ul className="text-xs text-gray-500 mt-1 space-y-0.5 ml-3 list-disc">
+                  <p className="text-xs text-gray-600 font-medium">CMS Update Schedule:</p>
+                  <ul className="text-xs text-gray-600 mt-1 space-y-0.5 ml-3 list-disc">
                     <li>Provider Information data: updated monthly (around the 1st)</li>
                     <li>Health Deficiency citations: updated monthly</li>
                     <li>
@@ -144,6 +144,7 @@ export default function AdminGuidePage() {
                         className="text-blue-600 hover:underline inline-flex items-center gap-0.5"
                       >
                         CMS announcements <ExternalLink size={9} />
+                        <span className="sr-only">(opens in a new tab)</span>
                       </a>{' '}
                       for exact dates
                     </li>
@@ -157,7 +158,7 @@ export default function AdminGuidePage() {
               <code className="text-xs text-blue-700 bg-white border border-gray-200 rounded px-2 py-1 block">
                 https://your-domain.com/admin/sync
               </code>
-              <p className="text-xs text-gray-400 mt-1">
+              <p className="text-xs text-gray-600 mt-1">
                 Bookmark this. It is not linked from the public map.
               </p>
             </div>
@@ -181,9 +182,9 @@ export default function AdminGuidePage() {
 
             <div className="border border-gray-200 rounded-lg overflow-hidden">
               <div className="grid grid-cols-3 bg-gray-50 border-b border-gray-200 px-4 py-2">
-                <span className="text-xs font-semibold text-gray-500">Variable</span>
-                <span className="text-xs font-semibold text-gray-500">Module</span>
-                <span className="text-xs font-semibold text-gray-500">Used In</span>
+                <span className="text-xs font-semibold text-gray-600">Variable</span>
+                <span className="text-xs font-semibold text-gray-600">Module</span>
+                <span className="text-xs font-semibold text-gray-600">Used In</span>
               </div>
               {[
                 {
@@ -238,7 +239,7 @@ export default function AdminGuidePage() {
                 >
                   <code className="text-xs text-violet-700 font-mono break-all">{row.env}</code>
                   <span className="text-xs text-gray-700">{row.module}</span>
-                  <span className="text-xs text-gray-500">{row.loc}</span>
+                  <span className="text-xs text-gray-600">{row.loc}</span>
                 </div>
               ))}
             </div>
@@ -322,7 +323,7 @@ export default function AdminGuidePage() {
                 >
                   <CheckCircle
                     size={14}
-                    className={`mt-0.5 flex-shrink-0 ${item.critical ? 'text-green-500' : 'text-gray-300'}`}
+                    className={`mt-0.5 flex-shrink-0 ${item.critical ? 'text-green-700' : 'text-gray-600'}`}
                   />
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -333,7 +334,7 @@ export default function AdminGuidePage() {
                         </span>
                       )}
                     </div>
-                    <p className="text-xs text-gray-500 mt-0.5">{item.detail}</p>
+                    <p className="text-xs text-gray-600 mt-0.5">{item.detail}</p>
                   </div>
                 </div>
               ))}
@@ -389,7 +390,7 @@ export default function AdminGuidePage() {
                   className={`border rounded-lg p-4 ${colors[gap.status as keyof typeof colors]}`}
                 >
                   <div className="flex items-start gap-2 mb-1">
-                    <AlertTriangle size={13} className="text-gray-500 mt-0.5 flex-shrink-0" />
+                    <AlertTriangle size={13} className="text-gray-600 mt-0.5 flex-shrink-0" />
                     <div>
                       <div className="flex items-center gap-2 flex-wrap">
                         <p className="text-xs font-semibold text-gray-800">{gap.title}</p>
@@ -410,19 +411,18 @@ export default function AdminGuidePage() {
 
         {/* Footer */}
         <div className="text-center py-4 border-t border-gray-200">
-          <p className="text-xs text-gray-400">
+          <p className="text-xs text-gray-600">
             CareGuard Admin Guide · Policy:{' '}
             <a
               href="https://loveyourlongevity.org/privacy"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 hover:underline inline-flex items-center gap-0.5"
+              target="_top"
+              className="text-blue-600 hover:underline inline-flex items-center gap-0.5"
             >
               loveyourlongevity.org/privacy <ExternalLink size={9} />
             </a>
           </p>
         </div>
       </div>
-    </div>
+    </main>
   );
 }

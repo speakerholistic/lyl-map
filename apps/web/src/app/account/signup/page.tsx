@@ -54,7 +54,7 @@ function SignUpForm() {
   };
 
   return (
-    <main className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-[16px]">
+    <main id="main-content" tabIndex={-1} className="flex min-h-screen w-full items-center justify-center bg-gray-50 p-[16px]">
       <form
         onSubmit={(e) => {
           void onSubmit(e);
@@ -106,7 +106,7 @@ function SignUpForm() {
         >
           Already have an account? Sign in
         </a>
-        <a href="/" className="text-center text-[13px] text-gray-500 hover:underline">
+        <a href="/" className="text-center text-[13px] text-gray-600 hover:underline">
           ← Back to home
         </a>
       </form>
